@@ -6,9 +6,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -23,10 +25,14 @@ public class MainActivity extends AppCompatActivity {
     // Constantes:
 
     // Dimension del GridView (Numero de columnas = Numero de filas).
-    private static final int DIMENSION = 8;
+    private static final int DIMENSION = 6;
 
 
     // Vistas:
+
+    @BindView(R.id.tv_log)
+    TextView tvLog;
+
     @BindView(R.id.b_ordenar)
     Button bOrdenar;
     @BindView(R.id.b_comenzar)
@@ -93,8 +99,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
+                tvLog.setText("Coords: "+ Arrays.toString(getCoords(position)));
+
             }
         });
+    }
+
+    private int[] getCoords(int position){
+
+        int counter = 0;
+        for (int i = 0; i < DIMENSION; i++){
+            for (int j = 0; j < DIMENSION; j++){
+                if (position == counter){
+                    return new int[]{j, i};
+                }
+                counter++;
+            }
+        }
+
+        return new int[]{0,0};
     }
 
     private void startGridAdapters(){

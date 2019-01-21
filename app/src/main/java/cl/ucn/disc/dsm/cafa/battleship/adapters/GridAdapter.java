@@ -67,7 +67,7 @@ public class GridAdapter extends BaseAdapter {
         }
 
         final GridCell cell = getItem(position);
-        holder.getButton().setBackgroundColor(Color.BLUE);
+        holder.getButton().setBackgroundColor(cell.getColor());
 
         // Permite que las celdas sean cuadradas.
         convertView.setLayoutParams(new GridView.LayoutParams(size,size));
