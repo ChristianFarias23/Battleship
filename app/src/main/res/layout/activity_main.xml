@@ -4,70 +4,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/normalGray"
 
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/tv_log"
-        android:layout_width="180dp"
-        android:layout_height="144dp"
+        android:id="@+id/tv_message"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/tenderGray"
         android:text="Log"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <GridView
         android:id="@+id/gv_rival"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="8dp"
+        android:background="@color/tenderGray"
         android:columnWidth="40dp"
         android:horizontalSpacing="1dp"
         android:verticalSpacing="1dp"
         app:layout_constraintBottom_toTopOf="@+id/gv_player"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.071"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_message"
+        app:layout_constraintVertical_bias="0.068" />
 
     <GridView
         android:id="@+id/gv_player"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/tenderGray"
         android:columnWidth="40dp"
         android:horizontalSpacing="1dp"
         android:verticalSpacing="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_log"
+        app:layout_constraintBottom_toTopOf="@+id/b_reiniciar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/b_comenzar"
-        android:layout_width="180dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorAccept"
         android:text="Comenzar"
-        app:layout_constraintBottom_toTopOf="@+id/b_reiniciar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_log" />
+        app:layout_constraintStart_toEndOf="@+id/b_reiniciar" />
 
     <Button
         android:id="@+id/b_reiniciar"
-        android:layout_width="180dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="16dp"
+        android:background="@color/colorError"
         android:text="Reiniciar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_log" />
+        app:layout_constraintEnd_toStartOf="@+id/b_comenzar"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

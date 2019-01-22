@@ -11,9 +11,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Vistas:
 
-    @BindView(R.id.tv_log)
-    TextView tvLog;
+    @BindView(R.id.tv_message)
+    TextView tvMessage;
 
     @BindView(R.id.b_comenzar)
     Button bComenzar;
@@ -110,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                tvLog.setText("Player Coords: "+ Arrays.toString(getCoords(position)));
+                tvMessage.setText("Player Coords: "+ Arrays.toString(getCoords(position)));
 
                 gameManager.managePlayerGridViewItemClick((GridAdapter) parent.getAdapter(), position);
             }
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                tvLog.setText("Rival Coords: "+ Arrays.toString(getCoords(position)));
+                tvMessage.setText("Rival Coords: "+ Arrays.toString(getCoords(position)));
 
                 gameManager.manageRivalGridViewItemClick((GridAdapter) parent.getAdapter(), position);
             }
