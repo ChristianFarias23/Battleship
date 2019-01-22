@@ -60,34 +60,76 @@ public class GameManager {
     @Getter
     GameState state = GameState.ARRANGE;
 
-    @Setter
     @Getter
-    Ship.ShipType arrangeType = Ship.ShipType.SUBMARINE;
+    private Ship.ShipType arrangeType = Ship.ShipType.SUBMARINE;
 
-    @Setter
     @Getter
-    Ship.Orientation arrangeOrientation = Ship.Orientation.VERTICAL;
+    private Ship.Orientation arrangeOrientation = Ship.Orientation.VERTICAL;
+
 
     private Player player1 = new Player(Player.PlayerType.HUMAN);
     private Player player2 = new Player(Player.PlayerType.BOT);
 
 
+    public void setArrangeType(Ship.ShipType arrangeType){
+        this.arrangeType = arrangeType;
+        setMessage("Tipo de nave: "+this.arrangeType + "\nOrientacion: " + this.arrangeOrientation);
+    }
+
+    public void setArrangeOrientation(Ship.Orientation arrangeOrientation){
+        this.arrangeOrientation = arrangeOrientation;
+        setMessage("Tipo de nave: "+this.arrangeType + "\nOrientacion: " + this.arrangeOrientation);
+    }
+
+
     public void managePlayerGridViewItemClick(GridAdapter adapter, int position) {
         // Ordenar las naves del jugador.
         if (this.state == GameState.ARRANGE) {
-            GridCell cell = adapter.getItem(position);
-
             Ship ship = new Ship(this.arrangeType, this.arrangeOrientation);
 
             // TODO: Contador de naves restantes.
-            if (placeShip(playerGridAdapter, player1, position, ship)){
-                player1.getShips().add(ship);
-                setShipGridCellsColor(adapter, ship);
+            placePlayer1Ship(position, ship);
 
-                setMessage("Nave posicionada correctamente en " + Arrays.toString(positionToCoordinates(position))+".");
-            } else {
-                setMessage("No se puede poner la nave aqui, posicion invalida! " + Arrays.toString(positionToCoordinates(position)));
+        }
+    }
+
+    private void placePlayer1Ship(int position, Ship ship){
+
+        // Verifica que se puedan poner mas naves.
+        if (arrangeType == Ship.ShipType.SUBMARINE && player1.getNumSubmarines() <= 0 ){
+            setMessage("Limite de submarinos alcanzado!");
+            return;
+        }
+
+        if (arrangeType == Ship.ShipType.CRUISER && player1.getNumCruisers() <= 0 ){
+            setMessage("Limite de cruceros alcanzado!");
+            return;
+        }
+
+        if (arrangeType == Ship.ShipType.BATTLESHIP && player1.getNumBattleships() <= 0 ){
+            setMessage("Limite de acorazados alcanzado!");
+            return;
+        }
+
+        if (placeShip(playerGridAdapter, player1, position, ship)){
+            player1.getShips().add(ship);
+            setShipGridCellsColor(playerGridAdapter, ship);
+
+            switch (arrangeType){
+                case SUBMARINE:
+                    player1.substractSubmarine();
+                    break;
+                case CRUISER:
+                    player1.substractCruiser();
+                    break;
+                case BATTLESHIP:
+                    player1.substractBattleship();
+                    break;
             }
+
+            setMessage("Nave posicionada correctamente en " + Arrays.toString(positionToCoordinates(position))+".");
+        } else {
+            setMessage("No se puede poner la nave aqui, posicion invalida! " + Arrays.toString(positionToCoordinates(position)));
         }
     }
 
@@ -123,7 +165,12 @@ public class GameManager {
         this.state = GameState.ARRANGE;
         this.arrangeType = Ship.ShipType.SUBMARINE;
         this.arrangeOrientation = Ship.Orientation.VERTICAL;
+
+        this.player1.reset();
+        this.player2.reset();
+
         setMessage("Posicione sus naves en el tablero.");
+
     }
 
     public void setBattleState() {

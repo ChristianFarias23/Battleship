@@ -5,7 +5,21 @@ import java.util.List;
 
 import lombok.Getter;
 
+import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_BATTLESHIPS;
+import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_CRUISERS;
+import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_SUBMARINES;
+
 public class Player {
+
+    @Getter
+    int numSubmarines;
+
+    @Getter
+    int numCruisers;
+
+    @Getter
+    int numBattleships;
+
 
     /**
      * Tipo de jugador.
@@ -21,8 +35,32 @@ public class Player {
 
     public Player(PlayerType type){
         this.type = type;
+        this.numSubmarines = NUM_SUBMARINES;
+        this.numCruisers = NUM_CRUISERS;
+        this.numBattleships = NUM_BATTLESHIPS;
     }
 
+    public void reset(){
+        this.numSubmarines = NUM_SUBMARINES;
+        this.numCruisers = NUM_CRUISERS;
+        this.numBattleships = NUM_BATTLESHIPS;
+
+        this.ships.clear();
+    }
+
+    public void substractSubmarine(){
+        this.numSubmarines--;
+    }
+
+
+    public void substractCruiser(){
+        this.numCruisers--;
+    }
+
+
+    public void substractBattleship(){
+        this.numBattleships--;
+    }
 
     public enum PlayerType{
         HUMAN,

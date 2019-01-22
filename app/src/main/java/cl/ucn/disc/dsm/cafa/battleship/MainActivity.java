@@ -170,8 +170,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void startGridAdapters(){
         List<GridCell> playerCells = new ArrayList<>();
         List<GridCell> rivalCells = new ArrayList<>();

@@ -67,7 +67,7 @@ public class Ship {
         /**
          * Un Crucero. Usa 2 celdas en el tablero.
          */
-        CRUISER (2,Color.parseColor("#4B8F8C")),
+        CRUISER (2, Color.parseColor("#4B8F8C")),
 
         /**
          * Un Acorazado. Usa 3 celdas en el tablero.
