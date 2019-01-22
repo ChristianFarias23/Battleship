@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
 import cl.ucn.disc.dsm.cafa.battleship.Controller.GameManager;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
+
+import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.positionToCoordinates;
 //import lombok.extern.slf4j.Slf4j;
 
 //TODO: Ordenar codigo. Delegar contenido a clases especificas.
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                tvMessage.setText("Player Coords: "+ Arrays.toString(getCoords(position)));
+                tvMessage.setText("Player Coords: "+ Arrays.toString(positionToCoordinates(position)));
 
                 gameManager.managePlayerGridViewItemClick((GridAdapter) parent.getAdapter(), position);
             }
@@ -118,27 +120,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                tvMessage.setText("Rival Coords: "+ Arrays.toString(getCoords(position)));
+                tvMessage.setText("Rival Coords: "+ Arrays.toString(positionToCoordinates(position)));
 
                 gameManager.manageRivalGridViewItemClick((GridAdapter) parent.getAdapter(), position);
             }
         });
     }
 
-    public static int[] getCoords(int position){
 
-        int counter = 0;
-        for (int i = 0; i < DIMENSION; i++){
-            for (int j = 0; j < DIMENSION; j++){
-                if (position == counter){
-                    return new int[]{j, i};
-                }
-                counter++;
-            }
-        }
-
-        return new int[]{0,0};
-    }
 
     private void startGridAdapters(){
         List<GridCell> playerCells = new ArrayList<>();

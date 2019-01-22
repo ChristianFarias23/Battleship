@@ -1,5 +1,9 @@
 package cl.ucn.disc.dsm.cafa.battleship.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
 import lombok.Getter;
 
 
@@ -12,12 +16,26 @@ public class Ship {
     /**
      * El tipo de nave.
      */
+    @Getter
     ShipType type = ShipType.SUBMARINE;
 
     /**
      * La orientacion de la nave.
      */
+    @Getter
     Orientation orientation = Orientation.VERTICAL;
+
+    /**
+     *
+     */
+    @Getter
+    List<GridCell> cells;
+
+    public Ship(ShipType type, Orientation orientation) {
+        this.type = type;
+        this.orientation = orientation;
+        this.cells = new ArrayList<>(type.getNumCells());
+    }
 
     public enum Orientation{
         VERTICAL,
