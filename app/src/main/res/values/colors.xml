@@ -8,4 +8,12 @@
     <color name="colorAccept">#5CB85C</color>
     <color name="tenderGray">#E9E9E9</color>
     <color name="normalGray">#BBBBBB</color>
+
+
+
+    <color name="gridCellEmpty">#0A2239</color>
+    <color name="gridCellSubmarine">#176087</color>
+    <color name="gridCellCruiser">#4B8F8C</color>
+    <color name="gridCellBattleship">#6C756B</color>
+
 </resources>

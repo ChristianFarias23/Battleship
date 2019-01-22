@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cl.ucn.disc.dsm.cafa.battleship.R;
+import cl.ucn.disc.dsm.cafa.battleship.model.CellStatus;
 import lombok.Getter;
 
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
@@ -90,7 +91,12 @@ public class GridAdapter extends BaseAdapter {
         }
 
         final GridCell cell = getItem(position);
-        holder.getButton().setBackgroundColor(cell.getStatus().getColor());
+
+        if (cell.getStatus() == CellStatus.USED_BY_PLAYER_1 || cell.getStatus() == CellStatus.USED_BY_PLAYER_2){
+            holder.getButton().setBackgroundColor(cell.getColorWithShip());
+        } else {
+            holder.getButton().setBackgroundColor(cell.getStatus().getColor());
+        }
 
         // Permite que las celdas sean cuadradas.
         convertView.setLayoutParams(new GridView.LayoutParams(size,size));

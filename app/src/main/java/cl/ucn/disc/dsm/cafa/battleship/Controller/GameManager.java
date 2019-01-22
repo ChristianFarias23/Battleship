@@ -16,6 +16,7 @@ import lombok.Setter;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.placeBotShips;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.placeShip;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.positionToCoordinates;
+import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.setShipGridCellsColor;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
 
 public class GameManager {
@@ -79,8 +80,10 @@ public class GameManager {
             Ship ship = new Ship(this.arrangeType, this.arrangeOrientation);
 
             // TODO: Contador de naves restantes.
-            if (placeShip(playerGridAdapter, player1,position, ship)){
+            if (placeShip(playerGridAdapter, player1, position, ship)){
                 player1.getShips().add(ship);
+                setShipGridCellsColor(adapter, ship);
+
                 setMessage("Nave posicionada correctamente en " + Arrays.toString(positionToCoordinates(position))+".");
             } else {
                 setMessage("No se puede poner la nave aqui, posicion invalida! " + Arrays.toString(positionToCoordinates(position)));
@@ -91,8 +94,6 @@ public class GameManager {
     private void setMessage(String message){
         this.tvMessage.setText(message);
     }
-
-    private static final int THRESHOLD = DIMENSION * DIMENSION;
 
     public void manageRivalGridViewItemClick(GridAdapter adapter, int position) {
         // Atacar las naves del rival.
@@ -127,8 +128,6 @@ public class GameManager {
 
     public void setBattleState() {
         // Ordenar las piezas del bot.
-
-        //TODO: Eliminar esto al implementar el modo de 2 jugadores.
 
         setMessage("El bot esta ordenando sus naves...");
 

@@ -2,12 +2,16 @@ package cl.ucn.disc.dsm.cafa.battleship.model;
 
 import android.graphics.Color;
 
+import cl.ucn.disc.dsm.cafa.battleship.MainActivity;
+import cl.ucn.disc.dsm.cafa.battleship.R;
 import lombok.Getter;
 
 /**
  * El estado de una celda en la matriz.
  */
+
 public enum CellStatus {
+
     /**
      * En esta celda se encontraba una nave o parte de ella.
      */
@@ -22,7 +26,7 @@ public enum CellStatus {
     /**
      * Celda vacia.
      */
-    EMPTY(Color.BLUE),
+    EMPTY(Color.parseColor("#0A2239")),
 
     /**
      * Celda ocupada por una nave del jugador 1.

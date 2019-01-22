@@ -12,6 +12,10 @@ public class GridCell {
 
     @Setter
     @Getter
+    private int colorWithShip;
+
+    @Setter
+    @Getter
     private CellStatus status;
 
     @Getter

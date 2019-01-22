@@ -1,8 +1,11 @@
 package cl.ucn.disc.dsm.cafa.battleship.model;
 
+import android.graphics.Color;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import cl.ucn.disc.dsm.cafa.battleship.R;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
 import lombok.Getter;
 
@@ -59,18 +62,17 @@ public class Ship {
         /**
          * Un Submarino. Usa 1 celda en el tablero.
          */
-        SUBMARINE (1),
+        SUBMARINE (1, Color.parseColor("#176087")),
 
         /**
          * Un Crucero. Usa 2 celdas en el tablero.
          */
-        CRUISER (2),
+        CRUISER (2,Color.parseColor("#4B8F8C")),
 
         /**
          * Un Acorazado. Usa 3 celdas en el tablero.
          */
-        BATTLESHIP(3);
-
+        BATTLESHIP(3, Color.parseColor("#6C756B"));
 
         /**
          * La cantidad de celdas que usa este tipo de nave.
@@ -78,8 +80,12 @@ public class Ship {
         @Getter
         private int numCells;
 
-        private ShipType(int numCells){
+        @Getter
+        private int color;
+
+        private ShipType(int numCells, int color){
             this.numCells = numCells;
+            this.color = color;
         }
 
     }

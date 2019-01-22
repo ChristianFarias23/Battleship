@@ -11,7 +11,6 @@ import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
 import cl.ucn.disc.dsm.cafa.battleship.model.CellStatus;
 import cl.ucn.disc.dsm.cafa.battleship.model.Player;
 import cl.ucn.disc.dsm.cafa.battleship.model.Ship;
-
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_BATTLESHIPS;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_CRUISERS;
@@ -127,12 +126,13 @@ public final class ArrangementValidator {
 
     public static void placeBotShips(GridAdapter adapter, Player botPlayer){
 
+        botPlayer.getShips().clear();
+
         for (int i = 0; i < NUM_BATTLESHIPS; i++) {
             placeBotShip(adapter, Ship.ShipType.BATTLESHIP, botPlayer);
         }
         for (int i = 0; i < NUM_CRUISERS; i++){
             placeBotShip(adapter, Ship.ShipType.CRUISER, botPlayer);
-
         }
 
         for (int i = 0; i < NUM_SUBMARINES; i++){
@@ -165,13 +165,15 @@ public final class ArrangementValidator {
             // Si se pudo poner la nave, agregarla a la lista de naves del bot.
 
             if (placeShip(adapter, botPlayer, position, ship)){
+                botPlayer.getShips().add(ship);
+                setShipGridCellsColor(adapter, ship);
                 return;
             }
 
             // Si no, intentar de nuevo.
             intentos--;
         }
-
+        return;
     }
 
 
@@ -185,6 +187,14 @@ public final class ArrangementValidator {
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
         int x = rand.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
+    }
+
+    public static void setShipGridCellsColor(GridAdapter adapter, Ship ship){
+        for (GridCell cell : ship.getCells()){
+            cell.setColorWithShip(ship.getType().getColor());
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
 

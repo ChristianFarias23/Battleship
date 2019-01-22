@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +68,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.b_battleship)
     Button bBattleship;
 
-    @BindView(R.id.b_vertical)
-    Button bVertical;
+    @BindView(R.id.toggle_vh)
+    ToggleButton toggleVH;
 
-    @BindView(R.id.b_horizontal)
-    Button bHorizontal;
 
     // Propiedades:
     private GridAdapter player1GridAdapter;
@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Reiniciar", Toast.LENGTH_SHORT).show();
                 gameManager.reset();
+                toggleVH.setChecked(true);
             }
         });
 
@@ -156,17 +157,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bVertical.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameManager.setArrangeOrientation(Ship.Orientation.VERTICAL);
-            }
-        });
+        toggleVH.setChecked(true);
 
-        bHorizontal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameManager.setArrangeOrientation(Ship.Orientation.HORIZONTAL);
+        toggleVH.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    gameManager.setArrangeOrientation(Ship.Orientation.VERTICAL);
+                } else {
+                    gameManager.setArrangeOrientation(Ship.Orientation.HORIZONTAL);
+                }
             }
         });
     }
