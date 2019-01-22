@@ -92,12 +92,12 @@ public final class ArrangementValidator {
      * @param position
      * @param ship
      */
-    public static List<GridCell> placeShip(GridAdapter adapter, Player player, int position, Ship ship){
+    public static boolean placeShip(GridAdapter adapter, Player player, int position, Ship ship){
 
         int [] coords = positionToCoordinates(position);
 
         if (!canPlaceShip(adapter, position, ship.getType().getNumCells(), ship.getOrientation())){
-            return null;
+            return false;
         }
 
         List<GridCell> cells = new ArrayList<>();
@@ -113,7 +113,7 @@ public final class ArrangementValidator {
                 cell = adapter.getItemByCoordinates(coords[0], coords[1] + i);
             }
 
-            cells.add(i, cell);
+            ship.getCells().add(i, cell);
 
             if (player.getType() == Player.PlayerType.HUMAN) {
                 cell.setStatus(CellStatus.USED_BY_PLAYER_1);
@@ -125,41 +125,25 @@ public final class ArrangementValidator {
         // Notifica al adaptador.
         adapter.notifyDataSetChanged();
 
-        return cells;
+        return true;
     }
 
     public static void placeBotShips(GridAdapter adapter, Player botPlayer){
 
-        List<Ship> ships = new ArrayList<>();
-
         for (int i = 0; i < NUM_BATTLESHIPS; i++) {
-            Ship ship;
-            ship = placeBotShip(adapter, Ship.ShipType.BATTLESHIP, botPlayer);
-
-            if (ship != null){
-                ships.add(ship);
-            }
+            placeBotShip(adapter, Ship.ShipType.BATTLESHIP, botPlayer);
         }
         for (int i = 0; i < NUM_CRUISERS; i++){
-            Ship ship;
-            ship = placeBotShip(adapter, Ship.ShipType.CRUISER, botPlayer);
+            placeBotShip(adapter, Ship.ShipType.CRUISER, botPlayer);
 
-            if (ship != null){
-                ships.add(ship);
-            }
         }
 
         for (int i = 0; i < NUM_SUBMARINES; i++){
-            Ship ship;
-            ship = placeBotShip(adapter, Ship.ShipType.SUBMARINE, botPlayer);
-
-            if (ship != null){
-                ships.add(ship);
-            }
+            placeBotShip(adapter, Ship.ShipType.SUBMARINE, botPlayer);
         }
 
         Log.d("BOT_SHIPS", "-------------------------");
-        for (Ship ship : ships) {
+        for (Ship ship : botPlayer.getShips()) {
             Log.d("BOT_SHIP", ship.getType() + " - " + ship.getOrientation() + " - " + ship.getCells().get(0).getXCoord());
             Log.d("BOT_SHIPS", "-------------------------");
         }
@@ -171,7 +155,7 @@ public final class ArrangementValidator {
      * @param adapter
      * @return
      */
-    public static Ship placeBotShip(GridAdapter adapter, Ship.ShipType type, Player botPlayer){
+    public static void placeBotShip(GridAdapter adapter, Ship.ShipType type, Player botPlayer){
         int intentos = DIMENSION;
         while (intentos > 0){
 
@@ -183,21 +167,14 @@ public final class ArrangementValidator {
 
             // Si se pudo poner la nave, agregarla a la lista de naves del bot.
 
-            List<GridCell> cells = placeShip(adapter, botPlayer, position, ship);
-
-            if (cells != null) {
-
-                for (GridCell cell : cells) {
-                    ship.getCells().add(cell);
-                    return ship;
-                }
+            if (placeShip(adapter, botPlayer, position, ship)){
+                return;
             }
 
             // Si no, intentar de nuevo.
             intentos--;
         }
 
-        return null;
     }
 
 

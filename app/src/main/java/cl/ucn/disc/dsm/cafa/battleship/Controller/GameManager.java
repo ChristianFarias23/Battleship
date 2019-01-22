@@ -93,9 +93,14 @@ public class GameManager {
             //Checkear si hay o no una nave en esta posicion.
 
             if (cell.getStatus().equals(CellStatus.USED_BY_PLAYER_2)) {
+                // Hit.
                 cell.setStatus(CellStatus.HIT);
                 setMessage("Hit!");
+            } else if (cell.getStatus().equals(CellStatus.HIT) || cell.getStatus().equals(CellStatus.MISS) ){
+                // Posicion ya atacada.
+                setMessage("...");
             } else {
+                // Miss.
                 cell.setStatus(CellStatus.MISS);
                 setMessage("Miss!");
             }

@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int DIMENSION = 6;
 
     // La cantidad de submarinos.
-    public static final int NUM_SUBMARINES = 2;
+    public static final int NUM_SUBMARINES = 3;
 
     // La cantidad de cruceros.
-    public static final int NUM_CRUISERS = 1;
+    public static final int NUM_CRUISERS = 2;
 
     // La cantidad de acorazados.
     public static final int NUM_BATTLESHIPS = 1;
