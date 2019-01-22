@@ -87,7 +87,6 @@ public final class ArrangementValidator {
 
     /**
      * Pone una nave en el tablero. Le asigna a la nave las celdas que le corresponden.
-     * Llamar este metodo luego de verificar que se puede poner esta nave aqui.
      * @param adapter
      * @param position
      * @param ship
@@ -99,8 +98,6 @@ public final class ArrangementValidator {
         if (!canPlaceShip(adapter, position, ship.getType().getNumCells(), ship.getOrientation())){
             return false;
         }
-
-        List<GridCell> cells = new ArrayList<>();
 
         // Asigna a la nave cada celda que le corresponde.
         for (int i = 0; i < ship.getType().getNumCells(); i++){

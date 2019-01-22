@@ -1,10 +1,10 @@
 package cl.ucn.disc.dsm.cafa.battleship.Controller;
 
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.TextView;
 
-import cl.ucn.disc.dsm.cafa.battleship.MainActivity;
+import java.util.Arrays;
+
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
 import cl.ucn.disc.dsm.cafa.battleship.model.CellStatus;
@@ -14,11 +14,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.placeBotShips;
+import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.placeShip;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.positionToCoordinates;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
-import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_BATTLESHIPS;
-import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_CRUISERS;
-import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_SUBMARINES;
 
 public class GameManager {
 
@@ -47,7 +45,6 @@ public class GameManager {
 
     public void setMessageTextView(TextView messageTextView){
         this.tvMessage = messageTextView;
-        setMessage("Posicione sus naves en el tablero.");
     }
 
     // ....
@@ -62,6 +59,14 @@ public class GameManager {
     @Getter
     GameState state = GameState.ARRANGE;
 
+    @Setter
+    @Getter
+    Ship.ShipType arrangeType = Ship.ShipType.SUBMARINE;
+
+    @Setter
+    @Getter
+    Ship.Orientation arrangeOrientation = Ship.Orientation.VERTICAL;
+
     private Player player1 = new Player(Player.PlayerType.HUMAN);
     private Player player2 = new Player(Player.PlayerType.BOT);
 
@@ -71,11 +76,15 @@ public class GameManager {
         if (this.state == GameState.ARRANGE) {
             GridCell cell = adapter.getItem(position);
 
-            // TODO: Checkear si se puede poner una nave en esta posicion.
+            Ship ship = new Ship(this.arrangeType, this.arrangeOrientation);
 
-            // Si se puede poner la nave en esta posicion, entonces OK.
-            cell.setStatus(CellStatus.USED_BY_PLAYER_1);
-            adapter.notifyDataSetChanged();
+            // TODO: Contador de naves restantes.
+            if (placeShip(playerGridAdapter, player1,position, ship)){
+                player1.getShips().add(ship);
+                setMessage("Nave posicionada correctamente en " + Arrays.toString(positionToCoordinates(position))+".");
+            } else {
+                setMessage("No se puede poner la nave aqui, posicion invalida! " + Arrays.toString(positionToCoordinates(position)));
+            }
         }
     }
 
@@ -109,8 +118,11 @@ public class GameManager {
         }
     }
 
-    public void setArrangeState() {
+    public void start() {
         this.state = GameState.ARRANGE;
+        this.arrangeType = Ship.ShipType.SUBMARINE;
+        this.arrangeOrientation = Ship.Orientation.VERTICAL;
+        setMessage("Posicione sus naves en el tablero.");
     }
 
     public void setBattleState() {
@@ -134,7 +146,7 @@ public class GameManager {
         botGridAdapter.setNewEmptyGrid();
         botGridAdapter.notifyDataSetChanged();
 
-        setArrangeState();
+        start();
     }
 
     //...

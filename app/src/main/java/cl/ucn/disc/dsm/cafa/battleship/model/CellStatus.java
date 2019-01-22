@@ -31,6 +31,7 @@ public enum CellStatus {
 
     /**
      * Celda ocupada por una nave del jugador 2 o por el BOT.
+     * MAGENTA SOLO PARA DESARROLLO. AL PUBLICAR USAR Color.BLUE.
      */
     USED_BY_PLAYER_2(Color.MAGENTA);
 

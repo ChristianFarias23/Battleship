@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -18,8 +17,7 @@ import butterknife.ButterKnife;
 import cl.ucn.disc.dsm.cafa.battleship.Controller.GameManager;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
-
-import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.positionToCoordinates;
+import cl.ucn.disc.dsm.cafa.battleship.model.Ship;
 //import lombok.extern.slf4j.Slf4j;
 
 //TODO: Ordenar codigo. Delegar contenido a clases especificas.
@@ -58,6 +56,21 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.gv_rival)
     GridView gvRival;
+
+    @BindView(R.id.b_submarine)
+    Button bSubmarine;
+
+    @BindView(R.id.b_cruiser)
+    Button bCruiser;
+
+    @BindView(R.id.b_battleship)
+    Button bBattleship;
+
+    @BindView(R.id.b_vertical)
+    Button bVertical;
+
+    @BindView(R.id.b_horizontal)
+    Button bHorizontal;
 
     // Propiedades:
     private GridAdapter player1GridAdapter;
@@ -110,8 +123,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                tvMessage.setText("Player Coords: "+ Arrays.toString(positionToCoordinates(position)));
-
                 gameManager.managePlayerGridViewItemClick((GridAdapter) parent.getAdapter(), position);
             }
         });
@@ -120,9 +131,42 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                tvMessage.setText("Rival Coords: "+ Arrays.toString(positionToCoordinates(position)));
-
                 gameManager.manageRivalGridViewItemClick((GridAdapter) parent.getAdapter(), position);
+            }
+        });
+
+        bSubmarine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameManager.setArrangeType(Ship.ShipType.SUBMARINE);
+            }
+        });
+
+        bCruiser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameManager.setArrangeType(Ship.ShipType.CRUISER);
+            }
+        });
+
+        bBattleship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameManager.setArrangeType(Ship.ShipType.BATTLESHIP);
+            }
+        });
+
+        bVertical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameManager.setArrangeOrientation(Ship.Orientation.VERTICAL);
+            }
+        });
+
+        bHorizontal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameManager.setArrangeOrientation(Ship.Orientation.HORIZONTAL);
             }
         });
     }
@@ -151,7 +195,11 @@ public class MainActivity extends AppCompatActivity {
 
         gameManager.setBotGridAdapter(player2GridAdapter);
         gameManager.setPlayerGridAdapter(player1GridAdapter);
+
         gameManager.setMessageTextView(tvMessage);
+
+
+        gameManager.start();
 
     }
 }
