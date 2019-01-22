@@ -11,21 +11,36 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cl.ucn.disc.dsm.cafa.battleship.Controller.GameManager;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
 //import lombok.extern.slf4j.Slf4j;
+
+//TODO: Ordenar codigo. Delegar contenido a clases especificas.
 
 //@Slf4j
 public class MainActivity extends AppCompatActivity {
 
     // Constantes:
 
-    // Dimension del GridView (Numero de columnas = Numero de filas).
-    private static final int DIMENSION = 6;
+    // Dimension de los tableros (Numero de columnas = Numero de filas).
+    public static final int DIMENSION = 6;
+
+    // La cantidad de submarinos.
+    public static final int NUM_SUBMARINES = 2;
+
+    // La cantidad de cruceros.
+    public static final int NUM_CRUISERS = 1;
+
+    // La cantidad de acorazados.
+    public static final int NUM_BATTLESHIPS = 1;
+
 
 
     // Vistas:
@@ -33,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tv_log)
     TextView tvLog;
 
-    @BindView(R.id.b_ordenar)
-    Button bOrdenar;
     @BindView(R.id.b_comenzar)
     Button bComenzar;
     @BindView(R.id.b_reiniciar)
@@ -50,17 +63,19 @@ public class MainActivity extends AppCompatActivity {
     private GridAdapter player1GridAdapter;
     private GridAdapter player2GridAdapter;
 
+    private GameManager gameManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        // Obtener instancia de GameManager.
+        gameManager = GameManager.getInstance();
+
         setListeners();
         startGridAdapters();
-
-        // Inicia el juego.
-        init();
     }
 
     @Override
@@ -69,22 +84,17 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "On Start", Toast.LENGTH_LONG).show();
     }
 
-    private void init() {
-
-    }
-
     private void setListeners() {
-        this.bOrdenar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Ordenar", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         this.bComenzar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Comenzar", Toast.LENGTH_SHORT).show();
+                if (gameManager.getState() == GameManager.GameState.ARRANGE) {
+                    Toast.makeText(MainActivity.this, "Comenzar", Toast.LENGTH_SHORT).show();
+                    gameManager.setBattleState();
+                } else {
+                    Toast.makeText(MainActivity.this, "Partida en curso", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -92,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Reiniciar", Toast.LENGTH_SHORT).show();
+                gameManager.reset();
             }
         });
 
@@ -99,13 +110,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                tvLog.setText("Coords: "+ Arrays.toString(getCoords(position)));
+                tvLog.setText("Player Coords: "+ Arrays.toString(getCoords(position)));
 
+                gameManager.managePlayerGridViewItemClick((GridAdapter) parent.getAdapter(), position);
+            }
+        });
+
+        gvRival.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
+                tvLog.setText("Rival Coords: "+ Arrays.toString(getCoords(position)));
+
+                gameManager.manageRivalGridViewItemClick((GridAdapter) parent.getAdapter(), position);
             }
         });
     }
 
-    private int[] getCoords(int position){
+    public static int[] getCoords(int position){
 
         int counter = 0;
         for (int i = 0; i < DIMENSION; i++){
@@ -121,22 +143,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startGridAdapters(){
-        List<GridCell> cells = new ArrayList<>();
+        List<GridCell> playerCells = new ArrayList<>();
+        List<GridCell> rivalCells = new ArrayList<>();
 
         for (int i = 0; i< DIMENSION; i++){
             for (int j = 0; j< DIMENSION; j++){
-                cells.add(new GridCell());
+                rivalCells.add(new GridCell(j,i));
+                playerCells.add(new GridCell(j,i));
             }
         }
 
-        player1GridAdapter = new GridAdapter(this, cells);
-        player2GridAdapter = new GridAdapter(this, cells);
+        player1GridAdapter = new GridAdapter(this, playerCells);
+        player2GridAdapter = new GridAdapter(this, rivalCells);
 
         gvPlayer.setNumColumns(DIMENSION);
         gvPlayer.setAdapter(player1GridAdapter);
 
         gvRival.setNumColumns(DIMENSION);
         gvRival.setAdapter(player2GridAdapter);
-    }
 
+        gameManager.setBotGridAdapter(player2GridAdapter);
+        gameManager.setPlayerGridAdapter(player1GridAdapter);
+
+    }
 }

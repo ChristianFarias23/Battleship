@@ -3,6 +3,7 @@ package cl.ucn.disc.dsm.cafa.battleship.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cl.ucn.disc.dsm.cafa.battleship.R;
 import lombok.Getter;
+
+import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
 
 public class GridAdapter extends BaseAdapter {
     private LayoutInflater inflater;
@@ -30,6 +34,15 @@ public class GridAdapter extends BaseAdapter {
         this.cells = cells;
     }
 
+    public void setNewEmptyGrid(){
+        this.cells = new ArrayList<>();
+        for (int i = 0; i< DIMENSION; i++){
+            for (int j = 0; j< DIMENSION; j++){
+                cells.add(new GridCell(j,i));
+            }
+        }
+    }
+
     @Override
     public int getCount() {
         if (this.cells != null)
@@ -41,7 +54,17 @@ public class GridAdapter extends BaseAdapter {
     public GridCell getItem(int position) {
         if (this.cells != null)
             return this.cells.get(position);
-        return null;    }
+        return null;
+    }
+
+    public GridCell getItemByCoordinates(int xCoord, int yCoord){
+        if (this.cells != null)
+            for (GridCell cell: this.cells)
+                if (cell.getXCoord() == xCoord && cell.getYCoord() == yCoord)
+                    return cell;
+
+        return null;
+    }
 
     @Override
     public long getItemId(int position) {
@@ -67,13 +90,15 @@ public class GridAdapter extends BaseAdapter {
         }
 
         final GridCell cell = getItem(position);
-        holder.getButton().setBackgroundColor(cell.getColor());
+        holder.getButton().setBackgroundColor(cell.getStatus().getColor());
+        Log.d("GRIDADAPTER::::::::", "Color: " + cell.getStatus().getColor()+ ", STATUS: " + cell.getStatus());
 
         // Permite que las celdas sean cuadradas.
         convertView.setLayoutParams(new GridView.LayoutParams(size,size));
 
         return convertView;
     }
+
 
     class ViewHolder{
         @Getter
