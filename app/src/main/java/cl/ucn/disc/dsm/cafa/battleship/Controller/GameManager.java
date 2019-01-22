@@ -43,7 +43,14 @@ public class GameManager {
         this.playerGridAdapter = gridAdapter;
     }
 
+    public void setMessageTextView(TextView messageTextView){
+        this.tvMessage = messageTextView;
+        setMessage("Posicione sus naves en el tablero.");
+    }
+
     // ....
+
+    private TextView tvMessage;
 
     private GridAdapter botGridAdapter;
 
@@ -67,13 +74,16 @@ public class GameManager {
         }
     }
 
+    private void setMessage(String message){
+        this.tvMessage.setText(message);
+    }
+
     private static final int THRESHOLD = DIMENSION * DIMENSION;
 
     private void arrangeBotGrid() {
         if (botGridAdapter != null) {
 
             // FIXME: No cubren el caso en que no se puedan poner mas naves. Loop infinito -> Crash.
-
 
             int placedBattleships = 0;
             int placedCruisers = 0;
@@ -230,8 +240,10 @@ public class GameManager {
 
             if (cell.getStatus().equals(CellStatus.USED_BY_PLAYER_2)) {
                 cell.setStatus(CellStatus.HIT);
+                setMessage("Hit!");
             } else {
                 cell.setStatus(CellStatus.MISS);
+                setMessage("Miss!");
             }
 
             adapter.notifyDataSetChanged();
@@ -246,9 +258,13 @@ public class GameManager {
         // Ordenar las piezas del bot.
 
         //TODO: Eliminar esto al implementar el modo de 2 jugadores.
+
+        setMessage("El bot esta ordenando sus naves...");
+
         Log.d("SHIP_PLACEMENT", "El Bot esta ordenando sus naves...");
         arrangeBotGrid();
 
+        setMessage("Batalla iniciada!");
         this.state = GameState.BATTLE;
     }
 

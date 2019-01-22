@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
         gameManager.setBotGridAdapter(player2GridAdapter);
         gameManager.setPlayerGridAdapter(player1GridAdapter);
+        gameManager.setMessageTextView(tvMessage);
 
     }
 }
