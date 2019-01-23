@@ -1,5 +1,6 @@
 package cl.ucn.disc.dsm.cafa.battleship;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cl.ucn.disc.dsm.cafa.battleship.Controller.GameManager;
@@ -22,6 +24,7 @@ import cl.ucn.disc.dsm.cafa.battleship.model.Ship;
 //import lombok.extern.slf4j.Slf4j;
 
 //TODO: Ordenar codigo. Delegar contenido a clases especificas.
+//TODO: Implementar una vista que indique el estado de las naves del jugador y del enemigo.
 
 //@Slf4j
 public class MainActivity extends AppCompatActivity {
@@ -70,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toggle_vh)
     ToggleButton toggleVH;
 
+    // Otros:
+
+    @BindColor(R.color.bootstrap4Warning)
+    int b4Yellow;
+
+    @BindColor(R.color.bootstrap4Fadded)
+    int b4White;
+
+    @BindColor(R.color.fadded)
+    int fadded;
 
     private GameManager gameManager;
 
@@ -81,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Obtener instancia de GameManager.
         gameManager = GameManager.getInstance();
+        gameManager.setMessageTextView(tvMessage);
 
         setListeners();
         startGridAdapters();
@@ -97,8 +111,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (gameManager.getState() == GameManager.GameState.ARRANGE) {
-                    if (gameManager.isPlayer1Ready())
+                    if (gameManager.isPlayer1Ready()) {
                         gameManager.setBattleState();
+                        buttonsSetEnabled(false);
+                    }
                 }
             }
         });
@@ -107,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameManager.reset();
+                buttonsSetEnabled(true);
                 toggleVH.setChecked(true);
             }
         });
@@ -129,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameManager.setArrangeType(Ship.ShipType.SUBMARINE);
+
+                bBattleship.setTextColor(b4White);
+                bCruiser.setTextColor(b4White);
+                bSubmarine.setTextColor(b4Yellow);
             }
         });
 
@@ -136,6 +157,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameManager.setArrangeType(Ship.ShipType.CRUISER);
+
+                bBattleship.setTextColor(b4White);
+                bSubmarine.setTextColor(b4White);
+                bCruiser.setTextColor(b4Yellow);
             }
         });
 
@@ -143,10 +168,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 gameManager.setArrangeType(Ship.ShipType.BATTLESHIP);
+
+                bCruiser.setTextColor(b4White);
+                bSubmarine.setTextColor(b4White);
+                bBattleship.setTextColor(b4Yellow);
             }
         });
-
-        toggleVH.setChecked(true);
 
         toggleVH.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -157,6 +184,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        bSubmarine.performClick();
+        toggleVH.setChecked(true);
+
     }
 
     private void startGridAdapters(){
@@ -183,13 +214,28 @@ public class MainActivity extends AppCompatActivity {
         gameManager.setBotGridAdapter(player2GridAdapter);
         gameManager.setPlayerGridAdapter(player1GridAdapter);
 
-        gameManager.setMessageTextView(tvMessage);
-
         gameManager.setSubmarineButton(bSubmarine);
         gameManager.setCruiserButton(bCruiser);
         gameManager.setBattleshipButton(bBattleship);
 
         gameManager.start();
 
+    }
+
+    private void buttonsSetEnabled(boolean bool){
+        if (!bool){
+            bSubmarine.setTextColor(fadded);
+            bCruiser.setTextColor(fadded);
+            bBattleship.setTextColor(fadded);
+        } else {
+            bSubmarine.setTextColor(b4Yellow);
+            bCruiser.setTextColor(b4White);
+            bBattleship.setTextColor(b4White);
+        }
+        bSubmarine.setEnabled(bool);
+        bCruiser.setEnabled(bool);
+        bBattleship.setEnabled(bool);
+        bComenzar.setEnabled(bool);
+        toggleVH.setEnabled(bool);
     }
 }

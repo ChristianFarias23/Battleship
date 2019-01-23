@@ -83,12 +83,12 @@ public class GameManager {
 
     public void setArrangeType(Ship.ShipType arrangeType){
         this.arrangeType = arrangeType;
-        setMessage("Tipo de nave: "+this.arrangeType + "\nOrientacion: " + this.arrangeOrientation);
+        int numCell = this.arrangeType.getNumCells();
+        setMessage("Esta nave utiliza " + numCell + (numCell == 1 ? " celda." : " celdas."));
     }
 
     public void setArrangeOrientation(Ship.Orientation arrangeOrientation){
         this.arrangeOrientation = arrangeOrientation;
-        setMessage("Tipo de nave: "+this.arrangeType + "\nOrientacion: " + this.arrangeOrientation);
     }
 
     public void setSubmarineButton(Button button){

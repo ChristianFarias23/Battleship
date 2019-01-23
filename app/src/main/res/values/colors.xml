@@ -4,12 +4,14 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="lightBlue">#E8E7FF</color>
-    <color name="colorError">#D9534F</color>
-    <color name="colorAccept">#5CB85C</color>
     <color name="tenderGray">#E9E9E9</color>
     <color name="normalGray">#BBBBBB</color>
 
-
+    <color name="bootstrap4Warning">#f0ad4e</color>
+    <color name="bootstrap4Success">#5CB85C</color>
+    <color name="bootstrap4Danger">#D9534F</color>
+    <color name="bootstrap4Fadded">#f7f7f7</color>
+    <color name="fadded">#7C7C7C</color>
 
     <color name="gridCellEmpty">#0A2239</color>
     <color name="gridCellSubmarine">#176087</color>
