@@ -1,4 +1,4 @@
-package cl.ucn.disc.dsm.cafa.battleship.model;
+package cl.ucn.disc.dsm.cafa.battleship.enumerations;
 
 import android.graphics.Color;
 

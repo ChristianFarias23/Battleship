@@ -1,10 +1,6 @@
 package cl.ucn.disc.dsm.cafa.battleship.adapters;
 
-import android.graphics.Color;
-
-import cl.ucn.disc.dsm.cafa.battleship.model.CellStatus;
-import cl.ucn.disc.dsm.cafa.battleship.model.Ship;
-import lombok.Builder;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.CellStatus;
 import lombok.Getter;
 import lombok.Setter;
 

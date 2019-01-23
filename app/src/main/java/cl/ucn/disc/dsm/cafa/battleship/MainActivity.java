@@ -20,7 +20,8 @@ import butterknife.ButterKnife;
 import cl.ucn.disc.dsm.cafa.battleship.Controller.GameManager;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
-import cl.ucn.disc.dsm.cafa.battleship.model.Ship;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.Orientation;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.ShipType;
 //import lombok.extern.slf4j.Slf4j;
 
 //TODO: Ordenar codigo. Delegar contenido a clases especificas.
@@ -110,11 +111,8 @@ public class MainActivity extends AppCompatActivity {
         this.bComenzar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (gameManager.getState() == GameManager.GameState.ARRANGE) {
-                    if (gameManager.isPlayer1Ready()) {
-                        gameManager.setBattleState();
-                        buttonsSetEnabled(false);
-                    }
+                if (gameManager.startBattle()){
+                    buttonsSetEnabled(false);
                 }
             }
         });
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         this.bReiniciar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameManager.reset();
+                gameManager.resetManager();
                 buttonsSetEnabled(true);
                 toggleVH.setChecked(true);
             }
@@ -145,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         bSubmarine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameManager.setArrangeType(Ship.ShipType.SUBMARINE);
+                gameManager.setArrangeType(ShipType.SUBMARINE);
 
                 bBattleship.setTextColor(b4White);
                 bCruiser.setTextColor(b4White);
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         bCruiser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameManager.setArrangeType(Ship.ShipType.CRUISER);
+                gameManager.setArrangeType(ShipType.CRUISER);
 
                 bBattleship.setTextColor(b4White);
                 bSubmarine.setTextColor(b4White);
@@ -167,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         bBattleship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameManager.setArrangeType(Ship.ShipType.BATTLESHIP);
+                gameManager.setArrangeType(ShipType.BATTLESHIP);
 
                 bCruiser.setTextColor(b4White);
                 bSubmarine.setTextColor(b4White);
@@ -178,9 +176,9 @@ public class MainActivity extends AppCompatActivity {
         toggleVH.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    gameManager.setArrangeOrientation(Ship.Orientation.VERTICAL);
+                    gameManager.setArrangeOrientation(Orientation.VERTICAL);
                 } else {
-                    gameManager.setArrangeOrientation(Ship.Orientation.HORIZONTAL);
+                    gameManager.setArrangeOrientation(Orientation.HORIZONTAL);
                 }
             }
         });
@@ -218,8 +216,7 @@ public class MainActivity extends AppCompatActivity {
         gameManager.setCruiserButton(bCruiser);
         gameManager.setBattleshipButton(bBattleship);
 
-        gameManager.start();
-
+        gameManager.startManager();
     }
 
     private void buttonsSetEnabled(boolean bool){

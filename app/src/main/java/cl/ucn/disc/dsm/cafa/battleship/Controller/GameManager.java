@@ -1,6 +1,5 @@
 package cl.ucn.disc.dsm.cafa.battleship.Controller;
 
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -8,36 +7,24 @@ import java.util.Arrays;
 
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
-import cl.ucn.disc.dsm.cafa.battleship.model.CellStatus;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.*;
 import cl.ucn.disc.dsm.cafa.battleship.model.Player;
 import cl.ucn.disc.dsm.cafa.battleship.model.Ship;
 import lombok.Getter;
-import lombok.Setter;
 
-import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.placeBotShips;
-import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.placeShip;
-import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.positionToCoordinates;
-import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.randomAttack;
-import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.setShipGridCellsColor;
-import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
-import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_BATTLESHIPS;
-import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_CRUISERS;
-import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_SUBMARINES;
+import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidation.*;
 
 public class GameManager {
 
 
     // Patron Singleton.
-    private static GameManager INSTANCE;
+    private static GameManager INSTANCE = new GameManager();
 
     //Constructor privado.
     private GameManager() {
     }
 
     public static GameManager getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new GameManager();
-        }
         return INSTANCE;
     }
 
@@ -64,33 +51,59 @@ public class GameManager {
     private GridAdapter playerGridAdapter;
 
 
+    /**
+     * El estado del juego.
+     */
     @Getter
-    GameState state = GameState.ARRANGE;
+    private GameState state = GameState.ARRANGE;
 
+    /**
+     * El turno actual.
+     */
     @Getter
-    GameTurn turn = GameTurn.PLAYER_1;
+    private GameTurn turn = GameTurn.PLAYER_1;
 
+    /**
+     * El tipo de nave a poner.
+     */
     @Getter
-    private Ship.ShipType arrangeType = Ship.ShipType.SUBMARINE;
+    private ShipType arrangeType = ShipType.SUBMARINE;
 
+    /**
+     * La orientacion de la nave a poner.
+     */
     @Getter
-    private Ship.Orientation arrangeOrientation = Ship.Orientation.VERTICAL;
+    private Orientation arrangeOrientation = Orientation.VERTICAL;
 
+    /**
+     * El primer jugador; Tu.
+     */
+    private Player player1 = new Player(PlayerType.HUMAN);
 
-    private Player player1 = new Player(Player.PlayerType.HUMAN);
-    private Player player2 = new Player(Player.PlayerType.BOT);
+    /**
+     * El segundo jugador; el Enemigo.
+     */
+    private Player player2 = new Player(PlayerType.BOT);
 
-
-    public void setArrangeType(Ship.ShipType arrangeType){
+    /**
+     * Cambia el tipo de nave a poner.
+     * @param arrangeType: El tipo de nave.
+     */
+    public void setArrangeType(ShipType arrangeType){
         this.arrangeType = arrangeType;
         int numCell = this.arrangeType.getNumCells();
         setMessage("Esta nave utiliza " + numCell + (numCell == 1 ? " celda." : " celdas."));
     }
 
-    public void setArrangeOrientation(Ship.Orientation arrangeOrientation){
+    /**
+     * Cambia la orientacion de la nave a poner.
+     * @param arrangeOrientation: La orientacion.
+     */
+    public void setArrangeOrientation(Orientation arrangeOrientation){
         this.arrangeOrientation = arrangeOrientation;
     }
 
+    // TODO
     public void setSubmarineButton(Button button){
         this.bSubmarine = button;
     }
@@ -104,38 +117,54 @@ public class GameManager {
     }
 
 
+    /**
+     * Delega el toque de una celda del tablero del jugador 1.
+     * @param position: La posicion de la celda que se toco.
+     */
     public void managePlayerGridViewItemClick(int position) {
-        // Ordenar las naves del jugador.
         if (this.state == GameState.ARRANGE) {
+
+            // Crea una nueva nave con la configuracion actual.
             Ship ship = new Ship(this.arrangeType, this.arrangeOrientation);
 
-            // TODO: Contador de naves restantes.
+            // Intenta poner la nave.
             placePlayer1Ship(position, ship);
         }
     }
 
+    /**
+     * Se encarga de poner una nave en el tablero del jugador 1 y actualizar la vista.
+     * @param position: La posicion donde se intentara poner la nave.
+     * @param ship: La nave.
+     */
     private void placePlayer1Ship(int position, Ship ship){
 
         // Verifica que se puedan poner mas naves.
-        if (arrangeType == Ship.ShipType.SUBMARINE && player1.getNumSubmarines() <= 0 ){
+        if (arrangeType == ShipType.SUBMARINE && player1.getNumSubmarines() <= 0 ){
             setMessage("Limite de submarinos alcanzado!");
             return;
         }
 
-        if (arrangeType == Ship.ShipType.CRUISER && player1.getNumCruisers() <= 0 ){
+        if (arrangeType == ShipType.CRUISER && player1.getNumCruisers() <= 0 ){
             setMessage("Limite de cruceros alcanzado!");
             return;
         }
 
-        if (arrangeType == Ship.ShipType.BATTLESHIP && player1.getNumBattleships() <= 0 ){
+        if (arrangeType == ShipType.BATTLESHIP && player1.getNumBattleships() <= 0 ){
             setMessage("Limite de acorazados alcanzado!");
             return;
         }
 
+        // Si se pudo poner la nave...
         if (placeShip(playerGridAdapter, player1, position, ship)){
+
+            // Agregarla a la lista de naves del jugador 1.
             player1.getShips().add(ship);
+
+            // "Pinta" las celdas de la nave.
             setShipGridCellsColor(playerGridAdapter, ship);
 
+            // Actualiza el texto del boton de la nave que se puso.
             switch (arrangeType){
                 case SUBMARINE:
                     player1.substractSubmarine();
@@ -150,72 +179,89 @@ public class GameManager {
                     bBattleship.setText("Acorazado ("+player1.getNumBattleships()+")");
                     break;
             }
+
             setMessage("Nave posicionada correctamente en " + Arrays.toString(positionToCoordinates(position))+".");
         } else {
             setMessage("No se puede poner la nave aqui, posicion invalida! " + Arrays.toString(positionToCoordinates(position)));
         }
     }
 
+    /**
+     * Escribe un mensaje para notificar al jugador.
+     * @param message: El mensaje.
+     */
     private void setMessage(String message){
         this.tvMessage.setText(message);
     }
 
+    /**
+     * Delega el toque de una celda del tablero del jugador 2.
+     * @param position: La posicion de la celda que se toco.
+     */
     public void manageRivalGridViewItemClick(int position) {
-        // Atacar las naves del rival.
-        if (this.state == GameState.BATTLE && this.turn == GameTurn.PLAYER_1) {
-            GridCell cell = botGridAdapter.getItem(position);
 
-            //Checkear si hay o no una nave en esta posicion.
+        // Si el juego ya ha iniciado...
+        if (this.state == GameState.BATTLE){
 
-            if (cell.getStatus().equals(CellStatus.USED_BY_PLAYER_2)) {
-                // Hit.
-                cell.setStatus(CellStatus.HIT);
-                setMessage("Hit!");
-            } else if (cell.getStatus().equals(CellStatus.HIT) || cell.getStatus().equals(CellStatus.MISS) ){
-                // Posicion ya atacada. Volver.
-                setMessage("...");
-                return;
-            } else {
-                // Empty -> Miss.
-                cell.setStatus(CellStatus.MISS);
-                setMessage("Miss!");
+            // Turno del jugador 1.
+
+            if (this.turn == GameTurn.PLAYER_1) {
+                GridCell cell = botGridAdapter.getItem(position);
+
+                //Checkear si hay o no una nave en esta posicion.
+                if (cell.getStatus().equals(CellStatus.USED_BY_PLAYER_2)) {
+                    // Hit.
+                    cell.setStatus(CellStatus.HIT);
+                    setMessage("Hit!");
+                } else if (cell.getStatus().equals(CellStatus.HIT) || cell.getStatus().equals(CellStatus.MISS) ){
+                    // Posicion ya atacada. Volver.
+                    setMessage("...");
+                    return;
+                } else {
+                    // Empty -> Miss.
+                    cell.setStatus(CellStatus.MISS);
+                    setMessage("Miss!");
+                }
+
+                // Notificar al adaptador.
+                botGridAdapter.notifyDataSetChanged();
+
+                // Cambiar de turno.
+                this.turn = GameTurn.PLAYER_2;
             }
 
-            // Notificar al adaptador.
-            botGridAdapter.notifyDataSetChanged();
+            // Verificar si el jugador 2 perdio.
 
-            // Cambiar de turno.
-            this.turn = GameTurn.PLAYER_2;
+            if (player2.hasLost()) {
+                setMessage("Has ganado!");
+                this.turn = GameTurn.END;
+            }
+
+            // Turno del jugador 2.
+
+            if (this.turn == GameTurn.PLAYER_2) {
+
+                // Atacar al jugador.
+                randomAttack(playerGridAdapter);
+
+                // Cambiar de turno.
+                this.turn = GameTurn.PLAYER_1;
+            }
+
+            // Verificar si el jugador 1 perdio.
+
+            if (player1.hasLost()){
+                setMessage("Has perdido!");
+                this.turn = GameTurn.END;
+            }
         }
 
-        if (this.state == GameState.BATTLE && player2.hasLost()) {
-            setMessage("Has ganado!");
-            this.turn = GameTurn.END;
-        }
-
-        // Bot ataca al jugador.
-        if (this.state == GameState.BATTLE && this.turn == GameTurn.PLAYER_2) {
-            // Atacar al jugador.
-            botAttacks();
-
-            // Cambiar de turno.
-            this.turn = GameTurn.PLAYER_1;
-        }
-
-        if (this.state == GameState.BATTLE && player1.hasLost()){
-            setMessage("Has perdido!");
-            this.turn = GameTurn.END;
-        }
     }
 
-
-    private void botAttacks(){
-        //La unica forma en que retorne falso es cuando ambos jugadores hayan llenado _todo_ el tablero.
-        if (!randomAttack(playerGridAdapter)){
-            Log.d("<<<<<<<<<<<<", "Tableros llenos.");
-        }
-    }
-
+    /**
+     * Verifica si el jugador 1 ha puesto todas sus naves. Muestra un mensaje si no es asi.
+     * @return
+     */
     public boolean isPlayer1Ready(){
         if (player1.isReady()){
             return true;
@@ -225,10 +271,13 @@ public class GameManager {
         return false;
     }
 
-    public void start() {
+    /**
+     * Inicia este game manager.
+     */
+    public void startManager() {
         this.state = GameState.ARRANGE;
-        this.arrangeType = Ship.ShipType.SUBMARINE;
-        this.arrangeOrientation = Ship.Orientation.VERTICAL;
+        this.arrangeType = ShipType.SUBMARINE;
+        this.arrangeOrientation = Orientation.VERTICAL;
 
         this.player1.reset();
 
@@ -241,40 +290,36 @@ public class GameManager {
         this.state = GameState.ARRANGE;
     }
 
-    public void setBattleState() {
-        // Ordenar las piezas del bot.
+    /**
+     * Si el jugador 1 puso todas sus naves, iniciar la partida.
+     * @return
+     */
+    public boolean startBattle() {
+        if (this.state == GameState.ARRANGE) {
+            if (isPlayer1Ready()) {
+                // Posiciona las naves del bot
+                placeBotShips(botGridAdapter, player2);
 
-        setMessage("El bot esta ordenando sus naves...");
+                setMessage("Batalla iniciada!\nAtaque al enemigo!");
+                this.state = GameState.BATTLE;
+                return true;
+            }
+        }
 
-        Log.d("SHIP_PLACEMENT", "El Bot esta ordenando sus naves...");
-        placeBotShips(botGridAdapter, player2);
-
-        setMessage("Batalla iniciada!\nAtaque al enemigo!");
-        this.state = GameState.BATTLE;
+        return false;
     }
 
-    public void reset() {
+
+    public void resetManager() {
         playerGridAdapter.setNewEmptyGrid();
         playerGridAdapter.notifyDataSetChanged();
 
         botGridAdapter.setNewEmptyGrid();
         botGridAdapter.notifyDataSetChanged();
 
-        start();
+        startManager();
     }
 
-    //...
-
-    public enum GameState {
-        ARRANGE,
-        BATTLE
-    }
-
-    public enum GameTurn{
-        PLAYER_1,
-        PLAYER_2,
-        END
-    }
 }
 
 

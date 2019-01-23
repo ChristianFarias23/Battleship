@@ -2,13 +2,14 @@ package cl.ucn.disc.dsm.cafa.battleship.Controller;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
-import cl.ucn.disc.dsm.cafa.battleship.model.CellStatus;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.CellStatus;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.Orientation;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.PlayerType;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.ShipType;
 import cl.ucn.disc.dsm.cafa.battleship.model.Player;
 import cl.ucn.disc.dsm.cafa.battleship.model.Ship;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
@@ -16,7 +17,7 @@ import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_BATTLESHIPS;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_CRUISERS;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_SUBMARINES;
 
-public final class ArrangementValidator {
+public final class ArrangementValidation {
 
     private static final Random rand = new Random();
 
@@ -65,13 +66,13 @@ public final class ArrangementValidator {
      * @param orientation
      * @return
      */
-    public static boolean canPlaceShip(GridAdapter adapter, int position, int shipSize, Ship.Orientation orientation){
+    public static boolean canPlaceShip(GridAdapter adapter, int position, int shipSize, Orientation orientation){
 
         int [] coords = positionToCoordinates(position);
 
         // Revisa cada celda que usara la nave. Basta con que una no sea valida para retornar falso.
         for (int i = 0; i < shipSize; i++){
-            if (orientation == Ship.Orientation.HORIZONTAL) {
+            if (orientation == Orientation.HORIZONTAL) {
                 if (!isGridCellEmpty(adapter, coords[0] + i, coords[1])) {
                     return false;
                 }
@@ -103,7 +104,7 @@ public final class ArrangementValidator {
 
             GridCell cell;
 
-            if (ship.getOrientation() == Ship.Orientation.HORIZONTAL) {
+            if (ship.getOrientation() == Orientation.HORIZONTAL) {
                 cell = adapter.getItemByCoordinates(coords[0] + i, coords[1]);
             } else {
                 cell = adapter.getItemByCoordinates(coords[0], coords[1] + i);
@@ -111,7 +112,7 @@ public final class ArrangementValidator {
 
             ship.getCells().add(i, cell);
 
-            if (player.getType() == Player.PlayerType.HUMAN) {
+            if (player.getType() == PlayerType.HUMAN) {
                 cell.setStatus(CellStatus.USED_BY_PLAYER_1);
             } else {
                 cell.setStatus(CellStatus.USED_BY_PLAYER_2);
@@ -129,14 +130,14 @@ public final class ArrangementValidator {
         botPlayer.getShips().clear();
 
         for (int i = 0; i < NUM_BATTLESHIPS; i++) {
-            placeBotShip(adapter, Ship.ShipType.BATTLESHIP, botPlayer);
+            placeBotShip(adapter, ShipType.BATTLESHIP, botPlayer);
         }
         for (int i = 0; i < NUM_CRUISERS; i++){
-            placeBotShip(adapter, Ship.ShipType.CRUISER, botPlayer);
+            placeBotShip(adapter, ShipType.CRUISER, botPlayer);
         }
 
         for (int i = 0; i < NUM_SUBMARINES; i++){
-            placeBotShip(adapter, Ship.ShipType.SUBMARINE, botPlayer);
+            placeBotShip(adapter, ShipType.SUBMARINE, botPlayer);
         }
 
         Log.d("BOT_SHIPS", "-------------------------");
@@ -152,12 +153,12 @@ public final class ArrangementValidator {
      * @param adapter
      * @return
      */
-    public static void placeBotShip(GridAdapter adapter, Ship.ShipType type, Player botPlayer){
+    public static void placeBotShip(GridAdapter adapter, ShipType type, Player botPlayer){
         int intentos = DIMENSION;
         while (intentos > 0){
 
             // Valores al azar.
-            Ship.Orientation orientation = randomEnum(Ship.Orientation.class);
+            Orientation orientation = randomEnum(Orientation.class);
             int position = (int) (Math.random() * DIMENSION * DIMENSION);
 
             Ship ship = new Ship(type, orientation);
@@ -246,6 +247,4 @@ public final class ArrangementValidator {
 
         return false;
     }
-
-
 }

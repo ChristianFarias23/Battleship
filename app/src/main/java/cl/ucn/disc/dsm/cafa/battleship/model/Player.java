@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.PlayerType;
 import lombok.Getter;
 
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_BATTLESHIPS;
@@ -100,10 +101,5 @@ public class Player {
             }
         }
         return true;
-    }
-
-    public enum PlayerType{
-        HUMAN,
-        BOT
     }
 }
