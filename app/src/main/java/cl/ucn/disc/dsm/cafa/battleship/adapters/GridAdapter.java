@@ -18,20 +18,29 @@ import lombok.Getter;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
 
 public class GridAdapter extends BaseAdapter {
+
+    /**
+     * El inflador.
+     */
     private LayoutInflater inflater;
 
+    /**
+     * Las celdas que maneja este adaptador.
+     */
     private List<GridCell> cells;
 
     /**
-     * Constructor del adaptador.
+     * Crea un adaptador.
      * @param context
-     * @param cells
      */
-    public GridAdapter(Context context, List<GridCell> cells){
+    public GridAdapter(Context context){
         this.inflater = LayoutInflater.from(context);
-        this.cells = cells;
+        setNewEmptyGrid();
     }
 
+    /**
+     * Reestablece las celdas.
+     */
     public void setNewEmptyGrid(){
         this.cells = new ArrayList<>();
         for (int i = 0; i< DIMENSION; i++){
@@ -41,6 +50,10 @@ public class GridAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * Obtiene la cantidad de celdas.
+     * @return
+     */
     @Override
     public int getCount() {
         if (this.cells != null)
@@ -48,6 +61,11 @@ public class GridAdapter extends BaseAdapter {
         return 0;
     }
 
+    /**
+     * Obtiene una celda en la posicion indicada.
+     * @param position: Posicion de la celda.
+     * @return La celda.
+     */
     @Override
     public GridCell getItem(int position) {
         if (this.cells != null)
@@ -55,6 +73,12 @@ public class GridAdapter extends BaseAdapter {
         return null;
     }
 
+    /**
+     * Obtiene una celda en las coordenadas indicadas.
+     * @param xCoord: Coordenada X.
+     * @param yCoord: Coordenada Y.
+     * @return La celda.
+     */
     public GridCell getItemByCoordinates(int xCoord, int yCoord){
         if (this.cells != null)
             for (GridCell cell: this.cells)

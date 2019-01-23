@@ -103,7 +103,7 @@ public class GameManager {
         this.arrangeShipOrientation = arrangeShipOrientation;
     }
 
-    // TODO
+
     public void setSubmarineButton(Button button){
         this.bSubmarine = button;
     }

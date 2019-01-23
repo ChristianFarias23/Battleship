@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int NUM_BATTLESHIPS = 1;
 
 
-
     // Vistas:
 
     @BindView(R.id.tv_message)
@@ -52,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.b_comenzar)
     Button bComenzar;
+
     @BindView(R.id.b_reiniciar)
     Button bReiniciar;
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toggle_vh)
     ToggleButton toggleVH;
 
-    // Otros:
+    // Colores:
 
     @BindColor(R.color.bootstrap4Warning)
     int b4Yellow;
@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
     @BindColor(R.color.fadded)
     int fadded;
 
+    /**
+     * El controlador del juego.
+     */
     private GameManager gameManager;
 
     @Override
@@ -94,17 +97,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Obtener instancia de GameManager.
         gameManager = GameManager.getInstance();
-        gameManager.setMessageTextView(tvMessage);
 
+        // Configurarlo.
+        configureGameManager();
+
+        // Asignar listeners.
         setListeners();
-        startGridAdapters();
+
+        // Iniciar manager.
+        gameManager.startManager();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
+    /**
+     * Asigna los listeners a las vistas necesarias.
+     */
     private void setListeners() {
 
         this.bComenzar.setOnClickListener(new View.OnClickListener() {
@@ -187,20 +193,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void startGridAdapters(){
-        List<GridCell> playerCells = new ArrayList<>();
-        List<GridCell> rivalCells = new ArrayList<>();
+    /**
+     * Configura el controlador del juego.
+     */
+    private void configureGameManager(){
 
-        for (int i = 0; i< DIMENSION; i++){
-            for (int j = 0; j< DIMENSION; j++){
-                rivalCells.add(new GridCell(j,i));
-                playerCells.add(new GridCell(j,i));
-            }
-        }
-
-        // Propiedades:
-        GridAdapter player1GridAdapter = new GridAdapter(this, playerCells);
-        GridAdapter player2GridAdapter = new GridAdapter(this, rivalCells);
+        GridAdapter player1GridAdapter = new GridAdapter(this);
+        GridAdapter player2GridAdapter = new GridAdapter(this);
 
         gvPlayer.setNumColumns(DIMENSION);
         gvPlayer.setAdapter(player1GridAdapter);
@@ -208,16 +207,18 @@ public class MainActivity extends AppCompatActivity {
         gvRival.setNumColumns(DIMENSION);
         gvRival.setAdapter(player2GridAdapter);
 
+        gameManager.setMessageTextView(tvMessage);
         gameManager.setBotGridAdapter(player2GridAdapter);
         gameManager.setPlayerGridAdapter(player1GridAdapter);
-
         gameManager.setSubmarineButton(bSubmarine);
         gameManager.setCruiserButton(bCruiser);
         gameManager.setBattleshipButton(bBattleship);
-
-        gameManager.startManager();
     }
 
+    /**
+     * Activa o desactiva los botones.
+     * @param bool
+     */
     private void buttonsSetEnabled(boolean bool){
         if (!bool){
             bSubmarine.setTextColor(fadded);
