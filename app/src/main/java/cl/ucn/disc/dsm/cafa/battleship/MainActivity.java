@@ -26,7 +26,7 @@ import cl.ucn.disc.dsm.cafa.battleship.model.Ship;
 //@Slf4j
 public class MainActivity extends AppCompatActivity {
 
-    // Constantes:
+    // Constantes: Tenga cuidado al cambiarlas, considere que todas las naves deben caber en DIMENSION^2.
 
     // Dimension de los tableros (Numero de columnas = Numero de filas).
     public static final int DIMENSION = 6;
@@ -97,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (gameManager.getState() == GameManager.GameState.ARRANGE) {
-                    gameManager.setBattleState();
+                    if (gameManager.isPlayer1Ready())
+                        gameManager.setBattleState();
                 }
             }
         });
@@ -184,6 +185,9 @@ public class MainActivity extends AppCompatActivity {
 
         gameManager.setMessageTextView(tvMessage);
 
+        gameManager.setSubmarineButton(bSubmarine);
+        gameManager.setCruiserButton(bCruiser);
+        gameManager.setBattleshipButton(bBattleship);
 
         gameManager.start();
 

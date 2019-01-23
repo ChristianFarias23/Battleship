@@ -50,18 +50,23 @@ public class Player {
         this.ships.clear();
     }
 
-    public void substractSubmarine(){
-        this.numSubmarines--;
+    public boolean isReady(){
+        return (this.numSubmarines == 0 && this.numCruisers == 0 && this.numBattleships == 0);
     }
 
+    public void substractSubmarine(){
+        if (this.numSubmarines>0)
+            this.numSubmarines--;
+    }
 
     public void substractCruiser(){
-        this.numCruisers--;
+        if (this.numCruisers>0)
+            this.numCruisers--;
     }
 
-
     public void substractBattleship(){
-        this.numBattleships--;
+        if (this.numBattleships>0)
+            this.numBattleships--;
     }
 
     public boolean hasLost(){

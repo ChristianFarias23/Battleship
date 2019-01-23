@@ -10,6 +10,8 @@ import lombok.Setter;
 
 public class GridCell {
 
+    // TODO: Agregar atributo HIDDEN. Determina si se muestra o no en el tablero.
+
     @Setter
     @Getter
     private int colorWithShip;

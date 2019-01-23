@@ -92,9 +92,16 @@ public class GridAdapter extends BaseAdapter {
 
         final GridCell cell = getItem(position);
 
-        if (cell.getStatus() == CellStatus.USED_BY_PLAYER_1 || cell.getStatus() == CellStatus.USED_BY_PLAYER_2){
+        // TODO: En desarrollo.
+        if (cell.getStatus() == CellStatus.USED_BY_PLAYER_1){
             holder.getButton().setBackgroundColor(cell.getColorWithShip());
+
+        } else if (cell.getStatus() == CellStatus.USED_BY_PLAYER_2){
+            // Para no mostrar las celdas del enemigo:
+            holder.getButton().setBackgroundColor(CellStatus.EMPTY.getColor());
+
         } else {
+            // Casos HIT, MISS, EMPTY
             holder.getButton().setBackgroundColor(cell.getStatus().getColor());
         }
 

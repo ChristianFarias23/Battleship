@@ -1,6 +1,7 @@
 package cl.ucn.disc.dsm.cafa.battleship.Controller;
 
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -19,6 +20,9 @@ import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.po
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.randomAttack;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.setShipGridCellsColor;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
+import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_BATTLESHIPS;
+import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_CRUISERS;
+import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_SUBMARINES;
 
 public class GameManager {
 
@@ -53,6 +57,8 @@ public class GameManager {
 
     private TextView tvMessage;
 
+    private Button bSubmarine, bCruiser, bBattleship;
+
     private GridAdapter botGridAdapter;
 
     private GridAdapter playerGridAdapter;
@@ -83,6 +89,18 @@ public class GameManager {
     public void setArrangeOrientation(Ship.Orientation arrangeOrientation){
         this.arrangeOrientation = arrangeOrientation;
         setMessage("Tipo de nave: "+this.arrangeType + "\nOrientacion: " + this.arrangeOrientation);
+    }
+
+    public void setSubmarineButton(Button button){
+        this.bSubmarine = button;
+    }
+
+    public void setCruiserButton(Button button){
+        this.bCruiser = button;
+    }
+
+    public void setBattleshipButton(Button button){
+        this.bBattleship = button;
     }
 
 
@@ -121,15 +139,17 @@ public class GameManager {
             switch (arrangeType){
                 case SUBMARINE:
                     player1.substractSubmarine();
+                    bSubmarine.setText("Submarino ("+player1.getNumSubmarines()+")");
                     break;
                 case CRUISER:
                     player1.substractCruiser();
+                    bCruiser.setText("Crucero ("+player1.getNumCruisers()+")");
                     break;
                 case BATTLESHIP:
                     player1.substractBattleship();
+                    bBattleship.setText("Acorazado ("+player1.getNumBattleships()+")");
                     break;
             }
-
             setMessage("Nave posicionada correctamente en " + Arrays.toString(positionToCoordinates(position))+".");
         } else {
             setMessage("No se puede poner la nave aqui, posicion invalida! " + Arrays.toString(positionToCoordinates(position)));
@@ -168,6 +188,10 @@ public class GameManager {
             this.turn = GameTurn.PLAYER_2;
         }
 
+        if (this.state == GameState.BATTLE && player2.hasLost()) {
+            setMessage("Has ganado!");
+            this.turn = GameTurn.END;
+        }
 
         // Bot ataca al jugador.
         if (this.state == GameState.BATTLE && this.turn == GameTurn.PLAYER_2) {
@@ -178,16 +202,9 @@ public class GameManager {
             this.turn = GameTurn.PLAYER_1;
         }
 
-        if (this.state == GameState.BATTLE){
-
-            if (player1.hasLost()){
-                setMessage("Has perdido!");
-                this.turn = GameTurn.END;
-            } else
-            if (player2.hasLost()){
-                setMessage("Has ganado!");
-                this.turn = GameTurn.END;
-            }
+        if (this.state == GameState.BATTLE && player1.hasLost()){
+            setMessage("Has perdido!");
+            this.turn = GameTurn.END;
         }
     }
 
@@ -199,13 +216,25 @@ public class GameManager {
         }
     }
 
+    public boolean isPlayer1Ready(){
+        if (player1.isReady()){
+            return true;
+        }
+
+        setMessage("Necesita posicionar todas sus naves antes de comenzar!");
+        return false;
+    }
+
     public void start() {
         this.state = GameState.ARRANGE;
         this.arrangeType = Ship.ShipType.SUBMARINE;
         this.arrangeOrientation = Ship.Orientation.VERTICAL;
 
         this.player1.reset();
-        this.player2.reset();
+
+        bSubmarine.setText("Submarino ("+player1.getNumSubmarines()+")");
+        bCruiser.setText("Crucero ("+player1.getNumCruisers()+")");
+        bBattleship.setText("Acorazado ("+player1.getNumBattleships()+")");
 
         setMessage("Posicione sus naves en el tablero.");
         this.turn = GameTurn.PLAYER_1;
@@ -220,7 +249,7 @@ public class GameManager {
         Log.d("SHIP_PLACEMENT", "El Bot esta ordenando sus naves...");
         placeBotShips(botGridAdapter, player2);
 
-        setMessage("Batalla iniciada!");
+        setMessage("Batalla iniciada!\nAtaque al enemigo!");
         this.state = GameState.BATTLE;
     }
 

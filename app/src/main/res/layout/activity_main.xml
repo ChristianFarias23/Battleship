@@ -13,12 +13,13 @@
         android:id="@+id/tv_message"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:background="@color/tenderGray"
         android:padding="5dp"
         android:text="Log"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,23 +29,25 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
         android:text="Enemigo"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/gv_rival"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_message" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <GridView
         android:id="@+id/gv_rival"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="120dp"
         android:background="@color/tenderGray"
         android:columnWidth="40dp"
         android:horizontalSpacing="1dp"
         android:verticalSpacing="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_message" />
 
@@ -52,8 +55,9 @@
         android:id="@+id/gv_player"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="120dp"
         android:layout_marginBottom="16dp"
         android:background="@color/tenderGray"
         android:columnWidth="40dp"
@@ -64,14 +68,15 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gv_rival"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/b_comenzar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/colorAccept"
         android:text="Comenzar"
@@ -85,8 +90,8 @@
         android:id="@+id/b_reiniciar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/colorError"
         android:text="Reiniciar"
@@ -98,71 +103,72 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
         android:text="Tu"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/gv_player"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gv_rival" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/b_submarine"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:backgroundTint="@color/gridCellSubmarine"
         android:text="Submarino"
+        app:layout_constraintBottom_toTopOf="@+id/b_cruiser"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toEndOf="@+id/gv_rival"
-        app:layout_constraintTop_toBottomOf="@+id/tv_message" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/gv_player"
+        app:layout_constraintTop_toBottomOf="@+id/gv_rival"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/b_cruiser"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:backgroundTint="@color/gridCellCruiser"
         android:text="Crucero"
+        app:layout_constraintBottom_toTopOf="@+id/b_battleship"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/gv_rival"
-        app:layout_constraintTop_toBottomOf="@+id/b_submarine" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/gv_player" />
 
     <Button
         android:id="@+id/b_battleship"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
         android:backgroundTint="@color/gridCellBattleship"
         android:text="Acorazado"
+        app:layout_constraintBottom_toTopOf="@+id/toggle_vh"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toEndOf="@+id/gv_rival"
-        app:layout_constraintTop_toBottomOf="@+id/b_cruiser" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/gv_player" />
 
     <ToggleButton
         android:id="@+id/toggle_vh"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:text="ToggleButton"
         android:textOff="Horizontal"
         android:textOn="Vertical"
+        app:layout_constraintBottom_toTopOf="@+id/b_comenzar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/gv_player"
-        app:layout_constraintTop_toBottomOf="@+id/gv_rival" />
+        app:layout_constraintStart_toEndOf="@+id/gv_player" />
 
     <TextView
         android:id="@+id/textView3"
@@ -171,6 +177,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="Orientacion"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/toggle_vh"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -181,14 +188,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Tipo de nave"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/b_submarine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/gv_rival"
-        app:layout_constraintTop_toBottomOf="@+id/tv_message"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintStart_toEndOf="@+id/gv_player" />
 
 </android.support.constraint.ConstraintLayout>
