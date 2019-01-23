@@ -40,6 +40,23 @@ public class Ship {
         this.cells = new ArrayList<>(type.getNumCells());
     }
 
+    public boolean isDestroyed(){
+        int damage = 0;
+        for (GridCell cell: this.cells){
+            if (cell.getStatus() == CellStatus.HIT){
+                damage++;
+            }
+        }
+
+        if (damage == this.type.getNumCells())
+            return true;
+        return false;
+
+        /*
+        if (damage == ...) -> this.cells.remove(...?)
+         */
+    }
+
     /**
      * La orientacion de la nave.
      */

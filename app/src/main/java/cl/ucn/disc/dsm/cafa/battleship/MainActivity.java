@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -72,10 +71,6 @@ public class MainActivity extends AppCompatActivity {
     ToggleButton toggleVH;
 
 
-    // Propiedades:
-    private GridAdapter player1GridAdapter;
-    private GridAdapter player2GridAdapter;
-
     private GameManager gameManager;
 
     @Override
@@ -94,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Toast.makeText(this, "On Start", Toast.LENGTH_LONG).show();
     }
 
     private void setListeners() {
@@ -103,10 +97,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (gameManager.getState() == GameManager.GameState.ARRANGE) {
-                    Toast.makeText(MainActivity.this, "Comenzar", Toast.LENGTH_SHORT).show();
                     gameManager.setBattleState();
-                } else {
-                    Toast.makeText(MainActivity.this, "Partida en curso", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -114,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         this.bReiniciar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Reiniciar", Toast.LENGTH_SHORT).show();
                 gameManager.reset();
                 toggleVH.setChecked(true);
             }
@@ -123,16 +113,14 @@ public class MainActivity extends AppCompatActivity {
         gvPlayer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                gameManager.managePlayerGridViewItemClick((GridAdapter) parent.getAdapter(), position);
+                gameManager.managePlayerGridViewItemClick(position);
             }
         });
 
         gvRival.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, ""+position, Toast.LENGTH_SHORT).show();
-                gameManager.manageRivalGridViewItemClick((GridAdapter) parent.getAdapter(), position);
+                gameManager.manageRivalGridViewItemClick(position);
             }
         });
 
@@ -181,8 +169,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        player1GridAdapter = new GridAdapter(this, playerCells);
-        player2GridAdapter = new GridAdapter(this, rivalCells);
+        // Propiedades:
+        GridAdapter player1GridAdapter = new GridAdapter(this, playerCells);
+        GridAdapter player2GridAdapter = new GridAdapter(this, rivalCells);
 
         gvPlayer.setNumColumns(DIMENSION);
         gvPlayer.setAdapter(player1GridAdapter);

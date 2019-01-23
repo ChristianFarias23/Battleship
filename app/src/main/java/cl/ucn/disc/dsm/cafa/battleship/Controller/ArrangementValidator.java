@@ -198,5 +198,54 @@ public final class ArrangementValidator {
     }
 
 
+    /**
+     * Ataca al tablero del jugador, usando una posicion al azar.
+     * @param adapter
+     */
+    public static boolean randomAttack(GridAdapter adapter){
+
+        boolean emptyGridCellLeft = checkIfAdapterHasEmptyGridCell(adapter);
+
+        //TODO:
+        // Si no quedan celdas disponibles, entonces no atacar. El juego deberia terminar.
+        if (!emptyGridCellLeft){
+            return false;
+        }
+
+        // Si quedan celdas disponibles, seguir intentando hasta encontrarla y entonces atacarla.
+        while (emptyGridCellLeft) {
+            int position = (int) (Math.random() * DIMENSION * DIMENSION);
+            GridCell cell = adapter.getItem(position);
+
+            if (cell.getStatus() == CellStatus.USED_BY_PLAYER_1) {
+                cell.setStatus(CellStatus.HIT);
+                break;
+            } else if (cell.getStatus().equals(CellStatus.EMPTY)) {
+                cell.setStatus(CellStatus.MISS);
+                break;
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+
+        return true;
+    }
+
+    /**
+     * Verifica si existe una casilla vacia en el tablero.
+     * @param adapter
+     * @return
+     */
+    public static boolean checkIfAdapterHasEmptyGridCell(GridAdapter adapter){
+
+        for (int i = 0; i< adapter.getCount(); i++){
+            if (adapter.getItem(i).getStatus().equals(CellStatus.EMPTY)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
 }

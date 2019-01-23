@@ -16,6 +16,7 @@ import lombok.Setter;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.placeBotShips;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.placeShip;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.positionToCoordinates;
+import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.randomAttack;
 import static cl.ucn.disc.dsm.cafa.battleship.Controller.ArrangementValidator.setShipGridCellsColor;
 import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.DIMENSION;
 
@@ -61,6 +62,9 @@ public class GameManager {
     GameState state = GameState.ARRANGE;
 
     @Getter
+    GameTurn turn = GameTurn.PLAYER_1;
+
+    @Getter
     private Ship.ShipType arrangeType = Ship.ShipType.SUBMARINE;
 
     @Getter
@@ -82,14 +86,13 @@ public class GameManager {
     }
 
 
-    public void managePlayerGridViewItemClick(GridAdapter adapter, int position) {
+    public void managePlayerGridViewItemClick(int position) {
         // Ordenar las naves del jugador.
         if (this.state == GameState.ARRANGE) {
             Ship ship = new Ship(this.arrangeType, this.arrangeOrientation);
 
             // TODO: Contador de naves restantes.
             placePlayer1Ship(position, ship);
-
         }
     }
 
@@ -137,10 +140,10 @@ public class GameManager {
         this.tvMessage.setText(message);
     }
 
-    public void manageRivalGridViewItemClick(GridAdapter adapter, int position) {
+    public void manageRivalGridViewItemClick(int position) {
         // Atacar las naves del rival.
-        if (this.state == GameState.BATTLE) {
-            GridCell cell = adapter.getItem(position);
+        if (this.state == GameState.BATTLE && this.turn == GameTurn.PLAYER_1) {
+            GridCell cell = botGridAdapter.getItem(position);
 
             //Checkear si hay o no una nave en esta posicion.
 
@@ -149,15 +152,50 @@ public class GameManager {
                 cell.setStatus(CellStatus.HIT);
                 setMessage("Hit!");
             } else if (cell.getStatus().equals(CellStatus.HIT) || cell.getStatus().equals(CellStatus.MISS) ){
-                // Posicion ya atacada.
+                // Posicion ya atacada. Volver.
                 setMessage("...");
+                return;
             } else {
-                // Miss.
+                // Empty -> Miss.
                 cell.setStatus(CellStatus.MISS);
                 setMessage("Miss!");
             }
 
-            adapter.notifyDataSetChanged();
+            // Notificar al adaptador.
+            botGridAdapter.notifyDataSetChanged();
+
+            // Cambiar de turno.
+            this.turn = GameTurn.PLAYER_2;
+        }
+
+
+        // Bot ataca al jugador.
+        if (this.state == GameState.BATTLE && this.turn == GameTurn.PLAYER_2) {
+            // Atacar al jugador.
+            botAttacks();
+
+            // Cambiar de turno.
+            this.turn = GameTurn.PLAYER_1;
+        }
+
+        if (this.state == GameState.BATTLE){
+
+            if (player1.hasLost()){
+                setMessage("Has perdido!");
+                this.turn = GameTurn.END;
+            } else
+            if (player2.hasLost()){
+                setMessage("Has ganado!");
+                this.turn = GameTurn.END;
+            }
+        }
+    }
+
+
+    private void botAttacks(){
+        //La unica forma en que retorne falso es cuando ambos jugadores hayan llenado _todo_ el tablero.
+        if (!randomAttack(playerGridAdapter)){
+            Log.d("<<<<<<<<<<<<", "Tableros llenos.");
         }
     }
 
@@ -170,7 +208,8 @@ public class GameManager {
         this.player2.reset();
 
         setMessage("Posicione sus naves en el tablero.");
-
+        this.turn = GameTurn.PLAYER_1;
+        this.state = GameState.ARRANGE;
     }
 
     public void setBattleState() {
@@ -202,6 +241,11 @@ public class GameManager {
         BATTLE
     }
 
+    public enum GameTurn{
+        PLAYER_1,
+        PLAYER_2,
+        END
+    }
 }
 
 

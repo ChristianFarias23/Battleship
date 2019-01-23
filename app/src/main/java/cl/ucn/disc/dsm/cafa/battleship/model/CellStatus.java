@@ -15,13 +15,12 @@ public enum CellStatus {
     /**
      * En esta celda se encontraba una nave o parte de ella.
      */
-    HIT(Color.RED),
+    HIT(Color.parseColor("#D9534F")),
 
     /**
      * En esta celda no habia nada.
      */
-    MISS(Color.YELLOW),
-
+    MISS(Color.parseColor("#F0AD4E")),
 
     /**
      * Celda vacia.
@@ -35,9 +34,8 @@ public enum CellStatus {
 
     /**
      * Celda ocupada por una nave del jugador 2 o por el BOT.
-     * MAGENTA SOLO PARA DESARROLLO. AL PUBLICAR USAR Color.BLUE.
      */
-    USED_BY_PLAYER_2(Color.MAGENTA);
+    USED_BY_PLAYER_2(Color.parseColor("#0A2239"));
 
     @Getter
     private int color;
