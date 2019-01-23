@@ -5,7 +5,7 @@ import java.util.List;
 
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
 import cl.ucn.disc.dsm.cafa.battleship.enumerations.CellStatus;
-import cl.ucn.disc.dsm.cafa.battleship.enumerations.Orientation;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.ShipOrientation;
 import cl.ucn.disc.dsm.cafa.battleship.enumerations.ShipType;
 import lombok.Getter;
 
@@ -26,7 +26,7 @@ public class Ship {
      * La orientacion de la nave.
      */
     @Getter
-    Orientation orientation = Orientation.VERTICAL;
+    ShipOrientation shipOrientation = ShipOrientation.VERTICAL;
 
     /**
      *
@@ -34,9 +34,9 @@ public class Ship {
     @Getter
     List<GridCell> cells;
 
-    public Ship(ShipType type, Orientation orientation) {
+    public Ship(ShipType type, ShipOrientation shipOrientation) {
         this.type = type;
-        this.orientation = orientation;
+        this.shipOrientation = shipOrientation;
         this.cells = new ArrayList<>(type.getNumCells());
     }
 

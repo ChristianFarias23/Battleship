@@ -73,7 +73,7 @@ public class GameManager {
      * La orientacion de la nave a poner.
      */
     @Getter
-    private Orientation arrangeOrientation = Orientation.VERTICAL;
+    private ShipOrientation arrangeShipOrientation = ShipOrientation.VERTICAL;
 
     /**
      * El primer jugador; Tu.
@@ -97,10 +97,10 @@ public class GameManager {
 
     /**
      * Cambia la orientacion de la nave a poner.
-     * @param arrangeOrientation: La orientacion.
+     * @param arrangeShipOrientation: La orientacion.
      */
-    public void setArrangeOrientation(Orientation arrangeOrientation){
-        this.arrangeOrientation = arrangeOrientation;
+    public void setArrangeShipOrientation(ShipOrientation arrangeShipOrientation){
+        this.arrangeShipOrientation = arrangeShipOrientation;
     }
 
     // TODO
@@ -125,7 +125,7 @@ public class GameManager {
         if (this.state == GameState.ARRANGE) {
 
             // Crea una nueva nave con la configuracion actual.
-            Ship ship = new Ship(this.arrangeType, this.arrangeOrientation);
+            Ship ship = new Ship(this.arrangeType, this.arrangeShipOrientation);
 
             // Intenta poner la nave.
             placePlayer1Ship(position, ship);
@@ -277,7 +277,7 @@ public class GameManager {
     public void startManager() {
         this.state = GameState.ARRANGE;
         this.arrangeType = ShipType.SUBMARINE;
-        this.arrangeOrientation = Orientation.VERTICAL;
+        this.arrangeShipOrientation = ShipOrientation.VERTICAL;
 
         this.player1.reset();
 

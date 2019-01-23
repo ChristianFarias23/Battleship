@@ -29,6 +29,9 @@ public enum ShipType{
     @Getter
     private int numCells;
 
+    /**
+     * El color de este tipo de nave.
+     */
     @Getter
     private int color;
 

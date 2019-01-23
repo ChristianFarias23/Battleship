@@ -14,15 +14,23 @@ import static cl.ucn.disc.dsm.cafa.battleship.MainActivity.NUM_SUBMARINES;
 
 public class Player {
 
+    /**
+     * La cantidad actual de submarinos de este jugador.
+     */
     @Getter
     int numSubmarines;
 
+    /**
+     * La cantidad actual de cruceros de este jugador.
+     */
     @Getter
     int numCruisers;
 
+    /**
+     * La cantidad actual de acorazados de este jugador.
+     */
     @Getter
     int numBattleships;
-
 
     /**
      * Tipo de jugador.
@@ -36,6 +44,10 @@ public class Player {
     @Getter
     List<Ship> ships = new ArrayList<>();
 
+    /**
+     * Crea un nuevo jugador.
+     * @param type: El tipo de jugador.
+     */
     public Player(PlayerType type){
         this.type = type;
         this.numSubmarines = NUM_SUBMARINES;
@@ -43,6 +55,9 @@ public class Player {
         this.numBattleships = NUM_BATTLESHIPS;
     }
 
+    /**
+     * Restaura los valores por defecto de este jugador.
+     */
     public void reset(){
         this.numSubmarines = NUM_SUBMARINES;
         this.numCruisers = NUM_CRUISERS;
@@ -51,8 +66,27 @@ public class Player {
         this.ships.clear();
     }
 
+    /**
+     * Verifica si el jugador ha puesto todas sus naves.
+     * @return
+     */
     public boolean isReady(){
         return (this.numSubmarines == 0 && this.numCruisers == 0 && this.numBattleships == 0);
+    }
+
+    /**
+     * Verifica si el jugador ha perdido.
+     * @return
+     */
+    public boolean hasLost(){
+
+        // Basta con que una nave esta viva para retornar falso.
+        for (Ship ship : this.ships){
+            if (!ship.isDestroyed()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void substractSubmarine(){
@@ -68,38 +102,5 @@ public class Player {
     public void substractBattleship(){
         if (this.numBattleships>0)
             this.numBattleships--;
-    }
-
-    public boolean hasLost(){
-        /*
-        int destroyedShips = 0;
-
-        for (Ship ship : this.ships){
-            if (ship.isDestroyed()) {
-                destroyedShips++;
-            }
-        }
-
-        if (destroyedShips == NUM_BATTLESHIPS + NUM_CRUISERS + NUM_SUBMARINES){
-            return true;
-        }
-
-        return false;
-        */
-
-        for (Ship ship : this.ships){
-            if (ship.isDestroyed()) {
-                Log.d("--->>> --->>>", "Nave destruida ");
-            } else {
-                Log.d("--->>> --->>>", "Nave viva ");
-            }
-        }
-
-        for (Ship ship : this.ships){
-            if (!ship.isDestroyed()) {
-                return false;
-            }
-        }
-        return true;
     }
 }

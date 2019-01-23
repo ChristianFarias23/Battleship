@@ -7,7 +7,7 @@ import java.util.Random;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
 import cl.ucn.disc.dsm.cafa.battleship.enumerations.CellStatus;
-import cl.ucn.disc.dsm.cafa.battleship.enumerations.Orientation;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.ShipOrientation;
 import cl.ucn.disc.dsm.cafa.battleship.enumerations.PlayerType;
 import cl.ucn.disc.dsm.cafa.battleship.enumerations.ShipType;
 import cl.ucn.disc.dsm.cafa.battleship.model.Player;
@@ -23,8 +23,8 @@ public final class ArrangementValidation {
 
     /**
      * Convierte una posicion a coordenadas en el tablero.
-     * @param position la posicion de la celda.
-     * @return coordenadas de la celda.
+     * @param position: La posicion de la celda.
+     * @return Las coordenadas de la celda.
      */
     public static int[] positionToCoordinates(int position){
 
@@ -42,8 +42,9 @@ public final class ArrangementValidation {
 
     /**
      * Verifica si la celda en la posicion indicada esta vacia.
-     * @param adapter
-     * @param position
+     * @deprecated
+     * @param adapter: El adaptador.
+     * @param position: La posicion a verificar.
      * @return
      */
     public static boolean isGridCellEmpty(GridAdapter adapter, int position){
@@ -51,6 +52,14 @@ public final class ArrangementValidation {
         return cell != null && cell.getStatus() == CellStatus.EMPTY;
     }
 
+    /**
+     * Verifica si la celda en las coordenadas indicadas esta vacia.
+     * @param adapter: El adaptador.
+     * @param xCoord: La coordenada X.
+     * @param yCoord: La coordenada Y.
+     * @return
+     *
+     */
     public static boolean isGridCellEmpty(GridAdapter adapter, int xCoord, int yCoord){
         GridCell cell = adapter.getItemByCoordinates(xCoord, yCoord);
         return cell != null && cell.getStatus() == CellStatus.EMPTY;
@@ -63,16 +72,16 @@ public final class ArrangementValidation {
      * @param adapter
      * @param position
      * @param shipSize
-     * @param orientation
+     * @param shipOrientation
      * @return
      */
-    public static boolean canPlaceShip(GridAdapter adapter, int position, int shipSize, Orientation orientation){
+    public static boolean canPlaceShip(GridAdapter adapter, int position, int shipSize, ShipOrientation shipOrientation){
 
         int [] coords = positionToCoordinates(position);
 
         // Revisa cada celda que usara la nave. Basta con que una no sea valida para retornar falso.
         for (int i = 0; i < shipSize; i++){
-            if (orientation == Orientation.HORIZONTAL) {
+            if (shipOrientation == ShipOrientation.HORIZONTAL) {
                 if (!isGridCellEmpty(adapter, coords[0] + i, coords[1])) {
                     return false;
                 }
@@ -95,7 +104,7 @@ public final class ArrangementValidation {
 
         int [] coords = positionToCoordinates(position);
 
-        if (!canPlaceShip(adapter, position, ship.getType().getNumCells(), ship.getOrientation())){
+        if (!canPlaceShip(adapter, position, ship.getType().getNumCells(), ship.getShipOrientation())){
             return false;
         }
 
@@ -104,7 +113,7 @@ public final class ArrangementValidation {
 
             GridCell cell;
 
-            if (ship.getOrientation() == Orientation.HORIZONTAL) {
+            if (ship.getShipOrientation() == ShipOrientation.HORIZONTAL) {
                 cell = adapter.getItemByCoordinates(coords[0] + i, coords[1]);
             } else {
                 cell = adapter.getItemByCoordinates(coords[0], coords[1] + i);
@@ -125,6 +134,11 @@ public final class ArrangementValidation {
         return true;
     }
 
+    /**
+     * Pone las naves del bot en su adaptador.
+     * @param adapter: El adaptador.
+     * @param botPlayer: El bot.
+     */
     public static void placeBotShips(GridAdapter adapter, Player botPlayer){
 
         botPlayer.getShips().clear();
@@ -142,7 +156,7 @@ public final class ArrangementValidation {
 
         Log.d("BOT_SHIPS", "-------------------------");
         for (Ship ship : botPlayer.getShips()) {
-            Log.d("BOT_SHIP", ship.getType() + " - " + ship.getOrientation() + " - " + ship.getCells().get(0).getXCoord());
+            Log.d("BOT_SHIP", ship.getType() + " - " + ship.getShipOrientation() + " - " + ship.getCells().get(0).getXCoord());
             Log.d("BOT_SHIPS", "-------------------------");
         }
 
@@ -150,7 +164,7 @@ public final class ArrangementValidation {
 
     /**
      * Intenta poner una nave generada al azar en
-     * @param adapter
+     * @param adapter: El adaptador.
      * @return
      */
     public static void placeBotShip(GridAdapter adapter, ShipType type, Player botPlayer){
@@ -158,10 +172,10 @@ public final class ArrangementValidation {
         while (intentos > 0){
 
             // Valores al azar.
-            Orientation orientation = randomEnum(Orientation.class);
+            ShipOrientation shipOrientation = randomEnum(ShipOrientation.class);
             int position = (int) (Math.random() * DIMENSION * DIMENSION);
 
-            Ship ship = new Ship(type, orientation);
+            Ship ship = new Ship(type, shipOrientation);
 
             // Si se pudo poner la nave, agregarla a la lista de naves del bot.
 
@@ -177,19 +191,11 @@ public final class ArrangementValidation {
         return;
     }
 
-
     /**
-     * Obtiene un valor de enum aleatorio.
-     * SRC: https://stackoverflow.com/a/14257525
-     * @param clazz
-     * @param <T>
-     * @return
+     * Cambia el color de las celdas para representar su nave asignada.
+     * @param adapter: El adaptador.
+     * @param ship: La nave.
      */
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        int x = rand.nextInt(clazz.getEnumConstants().length);
-        return clazz.getEnumConstants()[x];
-    }
-
     public static void setShipGridCellsColor(GridAdapter adapter, Ship ship){
         for (GridCell cell : ship.getCells()){
             cell.setColorWithShip(ship.getType().getColor());
@@ -201,7 +207,7 @@ public final class ArrangementValidation {
 
     /**
      * Ataca al tablero del jugador, usando una posicion al azar.
-     * @param adapter
+     * @param adapter: El adaptador.
      */
     public static boolean randomAttack(GridAdapter adapter){
 
@@ -234,7 +240,7 @@ public final class ArrangementValidation {
 
     /**
      * Verifica si existe una casilla vacia en el tablero.
-     * @param adapter
+     * @param adapter: El adaptador.
      * @return
      */
     public static boolean checkIfAdapterHasEmptyGridCell(GridAdapter adapter){
@@ -246,5 +252,20 @@ public final class ArrangementValidation {
         }
 
         return false;
+    }
+
+
+    // Utilidades:
+
+    /**
+     * Obtiene un valor de enum aleatorio.
+     * SRC: https://stackoverflow.com/a/14257525
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+        int x = rand.nextInt(clazz.getEnumConstants().length);
+        return clazz.getEnumConstants()[x];
     }
 }

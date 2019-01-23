@@ -1,6 +1,5 @@
 package cl.ucn.disc.dsm.cafa.battleship;
 
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +19,7 @@ import butterknife.ButterKnife;
 import cl.ucn.disc.dsm.cafa.battleship.Controller.GameManager;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridAdapter;
 import cl.ucn.disc.dsm.cafa.battleship.adapters.GridCell;
-import cl.ucn.disc.dsm.cafa.battleship.enumerations.Orientation;
+import cl.ucn.disc.dsm.cafa.battleship.enumerations.ShipOrientation;
 import cl.ucn.disc.dsm.cafa.battleship.enumerations.ShipType;
 //import lombok.extern.slf4j.Slf4j;
 
@@ -176,9 +175,9 @@ public class MainActivity extends AppCompatActivity {
         toggleVH.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    gameManager.setArrangeOrientation(Orientation.VERTICAL);
+                    gameManager.setArrangeShipOrientation(ShipOrientation.VERTICAL);
                 } else {
-                    gameManager.setArrangeOrientation(Orientation.HORIZONTAL);
+                    gameManager.setArrangeShipOrientation(ShipOrientation.HORIZONTAL);
                 }
             }
         });
