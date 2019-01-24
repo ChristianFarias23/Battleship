@@ -51,6 +51,16 @@ public class Ship {
         return damage == this.type.getNumCells();
     }
 
+    public int getHP(){
+        int hp = this.type.getNumCells();
+        for (GridCell cell: this.cells){
+            if (cell.getStatus() == CellStatus.HIT){
+                hp--;
+            }
+        }
+        return hp;
+    }
+
 
 
 }

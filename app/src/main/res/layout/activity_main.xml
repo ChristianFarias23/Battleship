@@ -196,4 +196,22 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/gv_player" />
 
+    <TextView
+        android:id="@+id/tv_enemy_hp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HP"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/gv_rival"
+        app:layout_constraintEnd_toEndOf="@+id/gv_rival" />
+
+    <TextView
+        android:id="@+id/tv_player_hp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HP"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/gv_player"
+        app:layout_constraintEnd_toEndOf="@+id/gv_player" />
+
 </android.support.constraint.ConstraintLayout>

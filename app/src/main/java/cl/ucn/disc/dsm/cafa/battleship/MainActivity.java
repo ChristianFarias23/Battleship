@@ -43,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     // La cantidad de acorazados.
     public static final int NUM_BATTLESHIPS = 1;
 
+    // La cantidad de puntos de vida por defecto.
+    public static final int DEFAULT_HP = (NUM_SUBMARINES * ShipType.SUBMARINE.getNumCells()
+            + NUM_CRUISERS + NUM_BATTLESHIPS * ShipType.CRUISER.getNumCells() + NUM_BATTLESHIPS * ShipType.BATTLESHIP.getNumCells()
+    );
+
 
     // Vistas:
 
@@ -72,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toggle_vh)
     ToggleButton toggleVH;
+
+    @BindView(R.id.tv_player_hp)
+    TextView tvPlayerHP;
+
+    @BindView(R.id.tv_enemy_hp)
+    TextView tvEnemyHP;
 
     // Colores:
 
@@ -207,12 +218,16 @@ public class MainActivity extends AppCompatActivity {
         gvRival.setNumColumns(DIMENSION);
         gvRival.setAdapter(player2GridAdapter);
 
-        gameManager.setMessageTextView(tvMessage);
         gameManager.setBotGridAdapter(player2GridAdapter);
         gameManager.setPlayerGridAdapter(player1GridAdapter);
-        gameManager.setSubmarineButton(bSubmarine);
-        gameManager.setCruiserButton(bCruiser);
-        gameManager.setBattleshipButton(bBattleship);
+
+        gameManager.setBSubmarine(bSubmarine);
+        gameManager.setBCruiser(bCruiser);
+        gameManager.setBBattleship(bBattleship);
+
+        gameManager.setTvMessage(tvMessage);
+        gameManager.setTvEnemyHP(tvEnemyHP);
+        gameManager.setTvPlayerHP(tvPlayerHP);
     }
 
     /**

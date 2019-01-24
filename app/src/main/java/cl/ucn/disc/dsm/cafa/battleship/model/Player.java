@@ -89,6 +89,16 @@ public class Player {
         return true;
     }
 
+    public int getHP(){
+
+        int hp = 0;
+        for (Ship ship : this.ships){
+            hp += ship.getHP();
+        }
+
+        return hp;
+    }
+
     public void substractSubmarine(){
         if (this.numSubmarines>0)
             this.numSubmarines--;
